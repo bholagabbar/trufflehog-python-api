@@ -3,7 +3,8 @@
 
 ## Folder structure
 
-- `api/`: Folder contains the API source and client code
+- `api/`: Folder contains the API source and client code. Includes all the drafts as well.
+- `api/drafts`: Contains possibly incomplete thoughts and ideas about the API draft when discussions were in progress.
 - `docs/`: Contains all of the documents about requirements, as well as other deliverables (such as the work
            summary and design rationalle)
 
@@ -13,7 +14,10 @@
 * `pip install -r requirements.txt` installs dependencies required for API, including truffleHog itself.
 
 ## Requirements
-Insert usecases>
+
+* As a security engineer, I want to use the trufflehog library API in my security webservice to find secrets in my repositories.
+* As a security engineer, I want to find secrets only in a subset of my repositories, some of which are private for a security audit of the company.
+* As a security engineer, I want the results of these finding summarized and dumped somewhere so I can alert corresponding stakeholders via a webhook or alert
 
 ## API Sketch
 Add basic API skeleton?
