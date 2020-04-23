@@ -13,22 +13,23 @@
 * `pip install -r requirements.txt` installs dependencies required for API, including truffleHog itself.
 
 ## Requirements
-<Insert usecases>
+Insert usecases>
 
 ## API Sketch
-<Add basic API skeleton?>
+Add basic API skeleton?
 
 ## Applying to usecases
-<Sample client code with skeleton>
+Sample client code with skeleton
 
 ## API Final Draft
-<link to folder>
+Link to folder
 
 ## Documentation
-<Will this be separate?>
+Will this be separate?
 
 ## Issues list
-<link to issues page>
+Link to issues page
 
 ## Rationale
-<link to wiki rationale>
+
+Link to wiki rationale
