@@ -19,6 +19,9 @@
 * As a security engineer, I want to find secrets only in a subset of my repositories, some of which are private for a security audit of the company.
 * As a security engineer, I want the results of these finding summarized and dumped somewhere so I can alert corresponding stakeholders via a webhook or alert
 
+More information can be found on the wiki page:  
+https://github.com/cakeid/17480-Final-Project/wiki/Requirements-Document
+
 ## API Sketch
 Add basic API skeleton?
 
@@ -32,8 +35,7 @@ Link to folder
 Will this be separate?
 
 ## Issues list
-Link to issues page
+https://github.com/cakeid/17480-Final-Project/issues
 
 ## Rationale
-
-Link to wiki rationale
+https://github.com/cakeid/17480-Final-Project/wiki/Design-Rationale
