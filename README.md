@@ -4,7 +4,6 @@
 ## Folder structure
 
 - `api/`: Folder contains the API source and client code. Includes all the drafts as well.
-- `api/drafts`: Contains possibly incomplete thoughts and ideas about the API draft when discussions were in progress.
 - `docs/`: Contains all of the documents about requirements, as well as other deliverables (such as the work
            summary and design rationalle)
 
