@@ -7,6 +7,11 @@
 - `docs/`: Contains all of the documents about requirements, as well as other deliverables (such as the work
            summary and design rationalle)
 
+## Setup
+* `virtualenv -p python3 venv` if you do not have a venv for the project.
+* `source venv/bin/activate` activates the virtual env.
+* `pip install -r requirements.txt` installs dependencies required for API, including truffleHog itself.
+
 ## Requirements
 <Insert usecases>
 
