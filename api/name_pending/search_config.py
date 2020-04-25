@@ -3,6 +3,7 @@ TODO: Documentation
 SearchConfig class.
 """
 
+from __future__ import annotations
 from typing import List
 
 
@@ -27,21 +28,21 @@ class SearchConfigBuilder():
     self._branch: str
     self._path_inclusions: List[str]
 
-  def since_commmit(self, commit: int) -> "SearchConfigBuilder":
+  def since_commit(self, commit: int) -> SearchConfigBuilder:
     """
     TODO: Documentation
     """
     self._since_commit = commit
     return self
 
-  def max_depth(self, max_depth: int) -> "SearchConfigBuilder":
+  def max_depth(self, max_depth: int) -> SearchConfigBuilder:
     """
     TODO: Documentation
     """
     self._max_depth = max_depth
     return self
 
-  def enable_entropy_checks(self, enable_entropy: bool) -> "SearchConfigBuilder":
+  def enable_entropy_checks(self, enable_entropy: bool) -> SearchConfigBuilder:
     """
     TODO: Documentation
     """
@@ -55,14 +56,14 @@ class SearchConfigBuilder():
     self._branch = branch
     return self
 
-  def path_inclusions(self, path_inclusions: List[str]) -> "SearchConfigBuilder":
+  def path_inclusions(self, path_inclusions: List[str]) -> SearchConfigBuilder:
     """
     TODO: Documentation
     """
     self._path_inclusions = list(path_inclusions)
     return self
 
-  def path_exclusions(self, path_exclusions: List[str]) -> "SearchConfigBuilder":
+  def path_exclusions(self, path_exclusions: List[str]) -> SearchConfigBuilder:
     """
     TODO: Documentation
     """
