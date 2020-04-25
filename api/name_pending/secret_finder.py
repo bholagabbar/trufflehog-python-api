@@ -32,12 +32,6 @@ class SecretFinder():
     TODO: Documentation
     """
 
-  # Parameters subject to change, may be cleaved into a few methods
-  def find_secrets_with_regex(self, search_config: SearchConfig) -> List[Secret]:
-    """
-    TODO: Documentation
-    """
-
   # As above, parameters subject to change, may be cleaved
   def find_batch_secrets(self, repo_path: str, search_config: SearchConfig) -> List[Secret]:
     """
