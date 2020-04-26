@@ -5,4 +5,4 @@ A rewritten version of the truffleHog API [1].
 """
 
 from .find_secrets_config import FindSecretsConfig, FindSecretsConfigBuilder
-from .find_secrets import Secret
+from .find_secrets import Secret, find_secrets
