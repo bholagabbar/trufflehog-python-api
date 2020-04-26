@@ -2,9 +2,9 @@
 Example of how to use the SearchConfigBuilder.
 """
 
-from trufflehog_api import SearchConfigBuilder
+from trufflehog_api import FindSecretsConfigBuilder
 
 
 def __main__():
-  builder = SearchConfigBuilder()
+  builder = FindSecretsConfigBuilder()
   print(builder)
