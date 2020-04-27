@@ -10,7 +10,7 @@ from typing import List
 
 from git import Repo
 
-from .find_secrets_config import FindSecretsConfig
+from trufflehog_api.find_secrets_config import FindSecretsConfig
 
 
 class Secret():
