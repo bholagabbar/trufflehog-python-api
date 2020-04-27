@@ -61,7 +61,7 @@ class FindSecretsConfig():
     return list(self._regexes)
 
   @property
-  def since_commit(self) -> int:
+  def since_commit(self) -> str:
     """TODO"""
     return self._since_commit
 
