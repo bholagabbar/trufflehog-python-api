@@ -14,12 +14,12 @@ class FindSecretsConfig():
   """
 
   def __init__(self, *,
-               branch,
-               entropy_checks_enabled,
-               max_depth,
-               path_exclusions,
-               path_inclusions,
-               since_commit):
+               branch: str,
+               entropy_checks_enabled: bool,
+               max_depth: int,
+               path_exclusions: List[str],
+               path_inclusions: List[str],
+               since_commit: int):
     """TODO"""
     self._branch: str = branch
     self._entropy_checks_enabled: bool = entropy_checks_enabled
