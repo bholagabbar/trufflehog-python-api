@@ -10,7 +10,7 @@ def main():
   Creates and prints a builder.
   """
   builder = FindSecretsConfigBuilder()
-  builder.with_branch('dev').with_enable_entropy_checks(False).with_since_commit(150)
+  builder.set_branch('dev').set_entropy_checks_enabled(False).set_since_commit(150)
 
   print(builder)
 
