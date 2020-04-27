@@ -20,7 +20,7 @@ class FindSecretsConfig():
                path_exclusions: List[str],
                path_inclusions: List[str],
                regexes: List[str],
-               since_commit: int):
+               since_commit: str):
     """TODO"""
     self._branch: str = branch
     self._entropy_checks_enabled: bool = entropy_checks_enabled
@@ -28,7 +28,7 @@ class FindSecretsConfig():
     self._path_exclusions: List[str] = list(path_exclusions)
     self._path_inclusions: List[str] = list(path_inclusions)
     self._regexes: List[str] = list(regexes)
-    self._since_commit: int = since_commit
+    self._since_commit: str = since_commit
 
   @property
   def branch(self) -> str:
@@ -78,7 +78,7 @@ class FindSecretsConfigBuilder():
     self._path_exclusions: List[str] = []
     self._path_inclusions: List[str] = []
     self._regexes: List[str] = []
-    self._since_commit: int = None
+    self._since_commit: str = None
 
   @property
   def branch(self) -> str:
@@ -145,7 +145,7 @@ class FindSecretsConfigBuilder():
     self._regexes = list(regexes)
     return self
 
-  def set_since_commit(self, commit: int) -> FindSecretsConfigBuilder:
+  def set_since_commit(self, commit: str) -> FindSecretsConfigBuilder:
     """TODO"""
     self._since_commit = commit
     return self
