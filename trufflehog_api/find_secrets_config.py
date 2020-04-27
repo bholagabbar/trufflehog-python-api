@@ -25,9 +25,9 @@ class FindSecretsConfig():
     self._branch: str = branch
     self._entropy_checks_enabled: bool = entropy_checks_enabled
     self._max_depth: int = max_depth
-    self._path_exclusions: List[str] = path_exclusions
-    self._path_inclusions: List[str] = path_inclusions
-    self._regexes: List[str] = regexes
+    self._path_exclusions: List[str] = list(path_exclusions)
+    self._path_inclusions: List[str] = list(path_inclusions)
+    self._regexes: List[str] = list(regexes)
     self._since_commit: int = since_commit
 
   @property
@@ -48,17 +48,17 @@ class FindSecretsConfig():
   @property
   def path_exclusions(self) -> List[str]:
     """TODO"""
-    return self._path_exclusions
+    return list(self._path_exclusions)
 
   @property
   def path_inclusions(self) -> List[str]:
     """TODO"""
-    return self._path_inclusions
+    return list(self._path_inclusions)
 
   @property
   def regexes(self) -> List[str]:
     """TODO"""
-    return self._regexes
+    return list(self._regexes)
 
   @property
   def since_commit(self) -> int:
@@ -98,17 +98,17 @@ class FindSecretsConfigBuilder():
   @property
   def path_exclusions(self) -> List[str]:
     """TODO"""
-    return self._path_exclusions
+    return list(self._path_exclusions)
 
   @property
   def path_inclusions(self) -> List[str]:
     """TODO"""
-    return self._path_inclusions
+    return list(self._path_inclusions)
 
   @property
   def regexes(self) -> List[str]:
     """TODO"""
-    return self._regexes
+    return list(self._regexes)
 
   @property
   def since_commit(self) -> int:
@@ -142,7 +142,7 @@ class FindSecretsConfigBuilder():
 
   def with_regexes(self, regexes: List[str]) -> FindSecretsConfigBuilder:
     """TODO"""
-    self._regexes = regexes
+    self._regexes = list(regexes)
     return self
 
   def with_since_commit(self, commit: int) -> FindSecretsConfigBuilder:
