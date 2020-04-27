@@ -72,13 +72,13 @@ class FindSecretsConfigBuilder():
   """
 
   def __init__(self):
-    self._branch: str
-    self._entropy_checks_enabled: bool
-    self._max_depth: int
-    self._path_exclusions: List[str]
-    self._path_inclusions: List[str]
-    self._regexes: List[str]
-    self._since_commit: int
+    self._branch: str = None
+    self._entropy_checks_enabled: bool = True
+    self._max_depth: int = 1_000_000
+    self._path_exclusions: List[str] = []
+    self._path_inclusions: List[str] = []
+    self._regexes: List[str] = []
+    self._since_commit: int = None
 
   @property
   def branch(self) -> str:
