@@ -33,7 +33,7 @@ def find_secrets_remote(url: str, settings: FindSecretsConfig) -> List[Secret]:
   """
   Identical to find_secrets, but creates a Repo based on the provided URL.
 
-  The repo is cloned into a temporary directory, which gets deleted by when the
+  The repo is cloned into a temporary directory, which gets deleted when the
   function finishes.
   """
   project_path: str = tempfile.mkdtemp()
