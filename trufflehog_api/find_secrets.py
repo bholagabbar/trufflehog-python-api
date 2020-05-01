@@ -56,7 +56,7 @@ class Secret():
   @property
   def diff(self) -> str:
     """TODO"""
-    return self._printable_diff
+    return self._diff
 
   @property
   def commit_hash(self) -> str:
@@ -84,6 +84,22 @@ class Secret():
   def to_dict(self):
     """TODO"""
     raise NotImplementedError()
+
+
+def _find_strings_to_secrets(output: dict) -> List[Secret]:
+  secrets = []
+  issues = output["foundIssues"]
+  for issue in issues:
+    secret = Secret(commit_time=issue['date'],
+                    branch_name=issue['branch'],
+                    prev_commit=issue['commit'],
+                    diff=issue['printDiff'],
+                    commit_hash=issue['commitHash'],
+                    reason=issue['reason'],
+                    path=issue['path'])
+    secrets.append(secret)
+  return secrets
+
 
 
 def find_secrets(repo: Repo, settings: FindSecretsConfig) -> List[Secret]:
