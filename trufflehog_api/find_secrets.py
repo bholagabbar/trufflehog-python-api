@@ -47,7 +47,7 @@ class Secret():
     """TODO"""
     return self._branch_name
 
-  # Returns None if there was no previous commit.
+  # TODO: Figure out how this is handled with no previous (Might be only commit).
   @property
   def prev_commit(self) -> str:
     """TODO"""
