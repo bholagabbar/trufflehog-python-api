@@ -20,11 +20,11 @@ class Secret():
   A secret found in a repository.
   """
 
-  def __init__(self,
+  def __init__(self, *,
                commit_time: datetime.datetime,
                branch_name: str,
                prev_commit: str,
-               printable_diff: str,
+               diff: str,
                commit_hash: str,
                reason: str,
                path: str):
@@ -32,7 +32,7 @@ class Secret():
     self._commit_time: datetime.datetime = commit_time
     self._branch_name: str = branch_name
     self._prev_commit: str = prev_commit
-    self._printable_diff: str = printable_diff
+    self._diff: str = diff
     self._commit_hash: str = commit_hash
     self._reason: str = reason
     self._path: str = path
@@ -47,13 +47,14 @@ class Secret():
     """TODO"""
     return self._branch_name
 
+  # Returns None if there was no previous commit.
   @property
   def prev_commit(self) -> str:
     """TODO"""
     return self._prev_commit
 
   @property
-  def printable_diff(self) -> str:
+  def diff(self) -> str:
     """TODO"""
     return self._printable_diff
 
