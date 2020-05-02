@@ -64,7 +64,8 @@ class SearchConfig:
 
     @property
     def regex_dict(self) -> Dict:
-        """Returns a whether high signal regex checks are enabled
+        """Returns a copy of the dictionary storing the high signal regexes used for the regex search
+        (default dict is provided by truffleHogRegexes package)
         """
         return self._regex_dict.copy()
 
@@ -78,7 +79,8 @@ class SearchConfig:
         """Builder method to enable regex checks for the search configuration object
 
         :param dict override_regex_dict:
-            Allows the user to override the default regex dictionary (default is provided by truffleHogRegexes package)
+            Allows the user to override the default regex dictionary by creating a copy of the object passed
+            and assigning it as the object's regex_dict
         """
         self._regex_search_enabled = True
         if override_regex_dict:
