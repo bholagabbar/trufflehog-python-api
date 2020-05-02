@@ -10,6 +10,9 @@ Ken Reitz's python repository structure recommendation ([Link](https://www.kenne
 * `source venv/bin/activate` activates the virtual env.
 * `pip install -r requirements.txt` installs dependencies required for API, including truffleHog itself.
 
+## Tests
+`python3 -m unittest discover -v`
+
 ## Requirements
 
 * As a security engineer, I want to use the trufflehog library API in my security webservice to find secrets in my repositories.
