@@ -3,14 +3,15 @@
 
 ## Folder structure
 
-- `api/`: Folder contains the API source and client code. Includes all the drafts as well.
-- `docs/`: Contains all of the documents about requirements, as well as other deliverables (such as the work
-           summary and design rationalle)
+Ken Reitz's python repository structure recommendation ([Link](https://www.kennethreitz.org/essays/repository-structure-and-python))
 
 ## Setup
 * `virtualenv -p python3 venv` if you do not have a venv for the project.
 * `source venv/bin/activate` activates the virtual env.
 * `pip install -r requirements.txt` installs dependencies required for API, including truffleHog itself.
+
+## Tests
+`python3 -m unittest discover -v`
 
 ## Requirements
 
