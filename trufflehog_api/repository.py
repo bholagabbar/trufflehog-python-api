@@ -2,21 +2,21 @@ from enum import Enum
 
 
 class RepositoryPathType(Enum):
-    """Indicates whether a repository path is a remote Git url or local filesystem path
+    """Indicates whether a repository path is a remote git url or local filesystem path
     """
-    GIT = 'GIT'
+    REMOTE = 'REMOTE'
     LOCAL = 'LOCAL'
 
 
 class Repository:
-    """Class to encapsulate details of a repository to search secrets in.
+    """Class to encapsulate details of a Git repository to search secrets in.
     """
 
     def __init__(self, *,
                  path: str,
                  branch: str = None,
                  since_commit: str = None,
-                 path_type: RepositoryPathType = RepositoryPathType.GIT):
+                 path_type: RepositoryPathType = RepositoryPathType.REMOTE):
         """Creates a new repository
 
         :param str path:
@@ -26,7 +26,7 @@ class Repository:
         :param str since_commit:
             Optional commit ID hash to search upwards from (default is None, all commits searched)
         :param RepositoryPathType path_type:
-            Indicates type of the repository (default is RepositoryPathType.GIT)
+            Indicates type of the repository (default is RepositoryPathType.REMOTE)
         """
         self._path: str = path
         self._branch: str = branch
