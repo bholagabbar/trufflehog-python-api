@@ -22,7 +22,7 @@ class Repository:
         :param str path:
             Path of the repository.
         :param str branch:
-            Branch to restrict search to (default is None, all branches to search)
+            Branch to restrict search to (default is None, all branches searched)
         :param str since_commit:
             Optional commit ID hash to search upwards from (default is None, all commits searched)
         :param RepositoryPathType path_type:
@@ -61,11 +61,11 @@ class Repository:
         """
         :return: The repository's path
         """
-        raise self.path
+        return self.path
 
     def __repr__(self):
         """
         :return: A string with the repository's path, branch, since_commit and path_type attributes
         """
         return ('Repository(path={0}, branch={1}, since_commit={2}, path_type={3})'
-                .format(self._path_type, str(self.branch), str(self.since_commit), str(self.path_type)))
+                .format(self.path_type, str(self.branch), str(self.since_commit), str(self.path_type)))
