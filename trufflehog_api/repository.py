@@ -33,6 +33,26 @@ class Repository:
         self._since_commit: str = since_commit
         self._path_type: RepositoryPathType = path_type
 
+    @classmethod
+    def from_repository(cls, repository, branch: str = None, since_commit: str = None):
+        """Static factor method which creates a new repository from an existing repository,
+        allowing user to override branch and since_commit attributes
+
+        :param Repository repository:
+            Repository object to copy attributes over from.
+        :param str branch:
+            Overridden value for branch to set.
+        :param str since_commit:
+            Overridden value for since_commit to set.
+        :return: An Repository object which is a deep copy of the repository parameter passed
+        with optionally overridden passed values.
+        """
+        branch_to_set = branch if branch else repository.branch
+        since_commit_to_set = since_commit if since_commit else repository.since_commit
+
+        return cls(path=repository.path, path_type=repository.path_type, branch=branch_to_set,
+                   since_commit=since_commit_to_set)
+
     @property
     def path(self) -> str:
         """Path to access the repository.
