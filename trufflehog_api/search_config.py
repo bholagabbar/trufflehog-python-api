@@ -12,7 +12,7 @@ class SearchConfig:
                  max_depth: int = 1000000,
                  include_search_paths: List[str] = None,
                  exclude_search_paths: List[str] = None,
-                 entropy_checks_enabled: bool = False,
+                 entropy_checks_enabled: bool = True,
                  regexes: Dict[str, str] = None,
                  ):
         """Creates a new default search configuration object with entropy and regex checks switched off
@@ -27,23 +27,26 @@ class SearchConfig:
             List of regular expressions restricting search to exclude matching object paths
             (default is None, no object paths are excluded).
         :param str entropy_checks_enabled:
-            Enable high signal entropy checks for a slower, but more thorough search. May yield
-            a higher number of false positives (default is False, entropy checks disabled).
+            Enable high signal entropy checks, this is the default secret finding mechanism of the library.
+            truffleHog will evaluate the shannon entropy for both the base64 char set and hexadecimal char set
+            for every blob of text greater than 20 characters comprised  of those character sets in each diff.
+            If at any point a high entropy string >20 characters is detected
+            (default is True, this is the default secret finding mechanism in the library).
         :param dict regexes:
             Use this argument to pass in a custom dictionary of regexes, eg. to search for project specific
             strings. The dictionary has keys as the description of a regex and value as the the regex string
             itself. For the user's convenience, the library provides a prebuilt regex dict populated with
             regexes corresponding to popular 3rd party API services. This dict is accessible as a static method
-            SearchConfig.default_regexes() (default is None, no additional regexes to search for.)
+            SearchConfig.default_regexes(). Search may be slower than than usual (default is None, no regexes to search)
         """
 
         self._max_depth: int = max_depth
-        self._entropy_checks_enabled = entropy_checks_enabled
+        self._entropy_checks_enabled: bool = entropy_checks_enabled
 
         # Defensively copy all mutable arguments passed
         self._include_search_paths: List[str] = copy(include_search_paths)
         self._exclude_search_paths: List[str] = copy(exclude_search_paths)
-        self._regexes = copy(regexes)
+        self._regexes: Dict[str, str] = copy(regexes)
 
     @property
     def max_depth(self) -> int:
