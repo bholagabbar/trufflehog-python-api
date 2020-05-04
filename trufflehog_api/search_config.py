@@ -1,6 +1,6 @@
 from typing import List
 from typing import Dict
-from truffleHogRegexes.regexChecks import regexes
+from truffleHogRegexes.regexChecks import regexes as default_regexes
 
 
 class SearchConfig:
@@ -9,83 +9,78 @@ class SearchConfig:
 
     def __init__(self, *,
                  max_depth: int = 1000000,
-                 search_paths_included: List[str] = None,
-                 search_paths_excluded: List[str] = None):
+                 include_search_paths: List[str] = None,
+                 exclude_search_paths: List[str] = None,
+                 entropy_checks_enabled: bool = False,
+                 regexes: Dict[str, str] = None,
+                 ):
         """Creates a new default search configuration object with entropy and regex checks switched off
 
         :param str max_depth:
             Maximum commit depth to continue search till (default is 1000000)
-        :param str search_paths_included:
+        :param str include_search_paths:
             List of regular expressions restricting search to matching object paths only. At least
             one of these must match a Git object path in order for the repository to be searched
             (default is None, all object paths are searched unless otherwise excluded by search_paths_excluded)
-        :param str search_paths_excluded:
+        :param str exclude_search_paths:
             List of regular expressions restricting search to exclude matching object paths
             (default is None, no object paths are excluded).
+        :param str entropy_checks_enabled:
+            Enable high signal entropy checks for a slower, but more thorough search. May yield
+            a higher number of false positives (default is False, entropy checks disabled).
+        :param dict regexes:
+            Use this argument to pass in a custom dictionary of regexes, eg. to search for project specific
+            strings. The dictionary has keys as the description of a regex and value as the the regex string
+            itself. For the user's convenience, the library provides a prebuilt regex dict populated with
+            regexes corresponding to popular 3rd party API services. This dict is accessible as a static method
+            SearchConfig.default_regexes() (default is None, no additional regexes to search for.)
         """
-        self._max_depth: int = max_depth
-        self._search_paths_included: List[str] = search_paths_included
-        self._search_paths_excluded: List[str] = search_paths_excluded
 
-        # Set defaults
-        self._entropy_checks_enabled = False
-        self._regex_search_enabled = False
-        self._regex_dict = regexes.copy()
+        self._max_depth: int = max_depth
+        self._entropy_checks_enabled = entropy_checks_enabled
+
+        # Defensively copy all arguments passed
+        self._include_search_paths: List[str] = include_search_paths.copy()
+        self._exclude_search_paths: List[str] = exclude_search_paths.copy()
+        self._regexes = regexes.copy() if regexes else None
 
     @property
     def max_depth(self) -> int:
-        """Maximum commit depth to continue search till.
+        """Returns an integer corresponding to the maximum commit depth to continue search till.
         """
         return self._max_depth
 
     @property
-    def search_paths_included(self) -> List[str]:
-        """List of regular expressions restricting search to matching object paths only.
+    def include_search_paths(self) -> List[str]:
+        """Returns a copy of the list of regular expressions restricting search to matching object paths only.
         """
-        return self._search_paths_included
+        return self._include_search_paths.copy()
 
     @property
-    def search_paths_excluded(self) -> List[str]:
-        """List of regular expressions restricting search to exclude matching object paths.
+    def exclude_search_paths(self) -> List[str]:
+        """Returns a copy of the list of regular expressions restricting search to exclude matching object paths.
         """
-        return self._search_paths_excluded
+        return self._exclude_search_paths.copy()
 
     @property
     def entropy_checks_enabled(self) -> bool:
-        """Indicates whether entropy checks are enabled
+        """Returns a boolean value indicating whether entropy checks are enabled
         """
         return self._entropy_checks_enabled
 
     @property
-    def regex_checks_enabled(self) -> bool:
-        """Indicates whether high signal regex checks are enabled
+    def regexes(self) -> Dict[str, str]:
+        """Returns a copy of the dict of custom regexes to search search matching project strings against
         """
-        return self._entropy_checks_enabled
+        return self._regexes.copy() if self._regexes else None
 
-    @property
-    def regex_dict(self) -> Dict:
-        """Returns a copy of the dictionary storing the high signal regexes used for the regex search
-        (default dict is provided by truffleHogRegexes package)
+    @staticmethod
+    def default_regexes() -> Dict[str, str]:
         """
-        return self._regex_dict.copy()
-
-    def with_entropy_checks_enabled(self):
-        """Builder method to enable entropy checks for the search configuration object
+        Returns a copy of the prebuilt regex dict provided by truffleHogRegexes
+        populated with regexes corresponding to popular 3rd party API services
         """
-        self._entropy_checks_enabled = True
-        return self
-
-    def with_regex_checks_enabled(self, override_regex_dict=None):
-        """Builder method to enable regex checks for the search configuration object
-
-        :param dict override_regex_dict:
-            Allows the user to override the default regex dictionary by creating a copy of the object passed
-            and assigning it as the object's regex_dict
-        """
-        self._regex_search_enabled = True
-        if override_regex_dict:
-            _regex_search_dict = override_regex_dict.copy()
-        return self
+        return default_regexes.copy()
 
     def __str__(self):
         """
