@@ -1,3 +1,4 @@
+import copy
 from typing import List
 from typing import Dict
 from truffleHogRegexes.regexChecks import regexes as default_regexes
@@ -39,10 +40,10 @@ class SearchConfig:
         self._max_depth: int = max_depth
         self._entropy_checks_enabled = entropy_checks_enabled
 
-        # Defensively copy all arguments passed
-        self._include_search_paths: List[str] = include_search_paths.copy()
-        self._exclude_search_paths: List[str] = exclude_search_paths.copy()
-        self._regexes = regexes.copy() if regexes else None
+        # Defensively copy all mutable arguments passed
+        self._include_search_paths: List[str] = copy.copy(include_search_paths)
+        self._exclude_search_paths: List[str] = copy.copy(exclude_search_paths)
+        self._regexes = copy.copy(regexes)
 
     @property
     def max_depth(self) -> int:
@@ -54,13 +55,13 @@ class SearchConfig:
     def include_search_paths(self) -> List[str]:
         """Returns a copy of the list of regular expressions restricting search to matching object paths only.
         """
-        return self._include_search_paths.copy()
+        return copy.copy(self._include_search_paths)
 
     @property
     def exclude_search_paths(self) -> List[str]:
         """Returns a copy of the list of regular expressions restricting search to exclude matching object paths.
         """
-        return self._exclude_search_paths.copy()
+        return copy.copy(self._exclude_search_paths)
 
     @property
     def entropy_checks_enabled(self) -> bool:
@@ -72,7 +73,7 @@ class SearchConfig:
     def regexes(self) -> Dict[str, str]:
         """Returns a copy of the dict of custom regexes to search search matching project strings against
         """
-        return self._regexes.copy() if self._regexes else None
+        return copy.copy(self._regexes)
 
     @staticmethod
     def default_regexes() -> Dict[str, str]:
@@ -80,7 +81,7 @@ class SearchConfig:
         Returns a copy of the prebuilt regex dict provided by truffleHogRegexes
         populated with regexes corresponding to popular 3rd party API services
         """
-        return default_regexes.copy()
+        return copy.copy(default_regexes)
 
     def __str__(self):
         """
