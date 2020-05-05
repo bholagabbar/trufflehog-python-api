@@ -4,7 +4,7 @@ Tests find_secrets methods.
 import unittest
 
 from .context import (Repository, RepositoryPathType,
-                      SearchConfig, Secret, find_secrets)
+                      SearchConfig, find_secrets)
 
 class TestFindSecrets(unittest.TestCase):
     """Unit tests for find_secrets method."""
@@ -17,6 +17,21 @@ class TestFindSecrets(unittest.TestCase):
 
         secrets = find_secrets(repo, config)
         self.assertIsNot(secrets, [])
+
+    def test_secret(self):
+        """Tests that the secrets found by the search are correctly represented in the Secret
+        object """
+        repo = Repository(path=".", path_type=RepositoryPathType.LOCAL)
+        config = SearchConfig(entropy_checks_enabled=False, regexes=SearchConfig.default_regexes())
+
+        secrets = find_secrets(repo, config)
+        for secret in secrets:
+            if secret.reason == "PGP private key block":
+                found_pgp_secret = True
+                path_to_secret = secret.path
+
+        self.assertTrue(found_pgp_secret)
+        self.assertEqual(path_to_secret, "test/resources/test_file.txt")
 
 if __name__ == '__main__':
     unittest.main()

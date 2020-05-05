@@ -1,0 +1,12 @@
+test_file
+
+user_name:truffle_hog_user
+password:password_123
+
+-----BEGIN RSA PRIVATE KEY-----
+
+ABdeGfdeadfaselsfefsefefkelfeks
+
+
+-----BEGIN PGP PRIVATE KEY BLOCK-----
+sfjahkljhfsflskjf;kdskdfsdkfj;
