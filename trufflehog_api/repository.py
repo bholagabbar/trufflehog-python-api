@@ -22,11 +22,14 @@ class Repository:
         :param str path:
             Path of the repository.
         :param str branch:
-            Branch to restrict search to (default is None, all branches searched)
+            Branch to restrict search to
+            (default is None, all branches searched)
         :param str since_commit:
-            Optional commit ID hash to search upwards from (default is None, all commits searched)
+            Optional commit ID hash to search upwards from
+            (default is None, all commits searched)
         :param RepositoryPathType path_type:
-            Indicates type of the repository (default is RepositoryPathType.REMOTE)
+            Indicates type of the repository
+            (default is RepositoryPathType.REMOTE)
         """
         self._path: str = path
         self._branch: str = branch
@@ -40,10 +43,13 @@ class Repository:
 
         :param Repository repository:
             Repository object to copy attributes over from.
+            (default is None)
         :param str branch:
             Overridden value for branch to set.
+            (default is None)
         :param str since_commit:
             Overridden value for since_commit to set.
+            (default is None)
         :return: An Repository object which is a deep copy of the repository parameter passed
         with optionally overridden passed values.
         """
