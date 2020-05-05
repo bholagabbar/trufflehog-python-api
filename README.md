@@ -13,7 +13,7 @@ Ken Reitz's python repository structure recommendation ([Link](https://www.kenne
 * `pip install -r requirements.txt` installs dependencies required for API, including truffleHog itself.
 
 ## Tests
-`python3 -m unittest discover -v`
+Runs all tests - `python3 -m unittest discover -v`
 
 ## Requirements
 https://github.com/cakeid/17480-Final-Project/wiki/Requirements-Document
@@ -28,7 +28,10 @@ Sample client code with skeleton
 Link to folder
 
 ## Documentation
-TODO
+* `pdoc` is installed when you run `pip install -r requirements-dev.txt`
+* Generate docs with `PYTHONPATH=. pdoc trufflehog_api --all-submodules --html --html-dir=docs/ --overwrite && 'cp' -rf docs/trufflehog_api/* docs/ && rm -rf docs/trufflehog_api`
+
+Docs are visible in the `/docs/` folder.
 
 ## Issues list
 https://github.com/cakeid/17480-Final-Project/issues
