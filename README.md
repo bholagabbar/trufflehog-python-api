@@ -16,16 +16,10 @@ Ken Reitz's python repository structure recommendation ([Link](https://www.kenne
 `python3 -m unittest discover -v`
 
 ## Requirements
-
-* As a security engineer, I want to use the trufflehog library API in my security webservice to find secrets in my repositories.
-* As a security engineer, I want to find secrets only in a subset of my repositories, some of which are private for a security audit of the company.
-* As a security engineer, I want the results of these finding summarized and dumped somewhere so I can alert corresponding stakeholders via a webhook or alert
-
-More information can be found on the wiki page:  
 https://github.com/cakeid/17480-Final-Project/wiki/Requirements-Document
 
 ## API Sketch
-* [v0.1](https://github.com/cakeid/17480-Final-Project/tree/41e253e29f05c0b3c0132ae903e83078cc1885b8/api/name_pending)
+TODO
 
 ## Applying to usecases
 Sample client code with skeleton
@@ -34,7 +28,7 @@ Sample client code with skeleton
 Link to folder
 
 ## Documentation
-Will this be separate?
+TODO
 
 ## Issues list
 https://github.com/cakeid/17480-Final-Project/issues
