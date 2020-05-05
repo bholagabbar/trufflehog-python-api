@@ -4,6 +4,8 @@ TODO: Documentation
 
 import datetime
 import json
+import os
+import shutil
 from typing import List
 
 from truffleHog import truffleHog
@@ -100,6 +102,10 @@ def _find_strings_to_secrets(output: dict) -> List[Secret]:
             secrets.append(secret)
     return secrets
 
+def _clean_up(output: dict):
+    issues_path = output.get("issues_path", None)
+    if issues_path and os.path.isdir(issues_path):
+        shutil.rmtree(output["issues_path"])
 
 def find_secrets(repo: Repository, config: SearchConfig) -> List[Secret]:
     """Searches for secrets in the repository repo using the search configuration config
@@ -123,5 +129,7 @@ def find_secrets(repo: Repository, config: SearchConfig) -> List[Secret]:
                                      repo_path=repo_path,
                                      path_inclusions=config.include_search_paths,
                                      path_exclusions=config.exclude_search_paths)
-    return _find_strings_to_secrets(output)
+    secrets = _find_strings_to_secrets(output)
+    _clean_up(output)
+    return secrets
     

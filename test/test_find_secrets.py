@@ -23,10 +23,12 @@ class TestFindSecrets(unittest.TestCase):
         object """
         repo = Repository(path=".", path_type=RepositoryPathType.LOCAL)
         config = SearchConfig(entropy_checks_enabled=False, regexes=SearchConfig.default_regexes())
+        
+        secrets = find_secrets(repo, config)
+        self.assertIsNot(secrets, [])
 
         found_pgp_secret = False
         path_to_secret = ''
-        secrets = find_secrets(repo, config)
         for secret in secrets:
             if secret.reason == "PGP private key block":
                 found_pgp_secret = True
