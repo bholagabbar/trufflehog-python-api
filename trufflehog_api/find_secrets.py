@@ -3,9 +3,12 @@ TODO: Documentation
 """
 
 import datetime
+import json
 from typing import List
 
-from trufflehog_api.repository import Repository
+from truffleHog import truffleHog
+
+from trufflehog_api.repository import Repository, RepositoryPathType
 from trufflehog_api.search_config import SearchConfig
 
 
@@ -84,18 +87,41 @@ class Secret:
 def _find_strings_to_secrets(output: dict) -> List[Secret]:
     secrets = []
     issues = output["foundIssues"]
-    for issue in issues:
-        secret = Secret(commit_time=issue['date'],
-                        branch_name=issue['branch'],
-                        prev_commit=issue['commit'],
-                        diff=issue['printDiff'],
-                        commit_hash=issue['commitHash'],
-                        reason=issue['reason'],
-                        path=issue['path'])
-        secrets.append(secret)
+    for issue_file in issues:
+        with open(issue_file) as result_file:
+            issue = json.loads(result_file.read())
+            secret = Secret(commit_time=issue['date'],
+                            branch_name=issue['branch'],
+                            prev_commit=issue['commit'],
+                            diff=issue['printDiff'],
+                            commit_hash=issue['commitHash'],
+                            reason=issue['reason'],
+                            path=issue['path'])
+            secrets.append(secret)
     return secrets
 
 
 def find_secrets(repo: Repository, config: SearchConfig) -> List[Secret]:
-    """TODO"""
-    raise NotImplementedError()
+    """Searches for secrets in the repository repo using the search configuration config
+       Returns a list of Secret objects, one for each secret found."""
+    if repo.path_type == RepositoryPathType.LOCAL:
+        git_url = None
+        repo_path = repo.path
+    else:
+        git_url = repo.path
+        repo_path = None
+
+    do_regex = config.regexes
+
+    output = truffleHog.find_strings(git_url=git_url,
+                                     since_commit=repo.since_commit,
+                                     max_depth=config.max_depth,
+                                     do_regex=do_regex,
+                                     do_entropy=config.entropy_checks_enabled,
+                                     custom_regexes=config.regexes,
+                                     branch=repo.branch,
+                                     repo_path=repo_path,
+                                     path_inclusions=config.include_search_paths,
+                                     path_exclusions=config.exclude_search_paths)
+    return _find_strings_to_secrets(output)
+    
