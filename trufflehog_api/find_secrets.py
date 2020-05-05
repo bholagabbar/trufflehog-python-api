@@ -7,10 +7,11 @@ import json
 import os
 import shutil
 from typing import List
+import git
 
 from truffleHog import truffleHog
 
-from trufflehog_api.repository import Repository, RepositoryPathType
+from trufflehog_api.repo_config import RepoConfig
 from trufflehog_api.search_config import SearchConfig
 
 
@@ -107,28 +108,39 @@ def _clean_up(output: dict):
     if issues_path and os.path.isdir(issues_path):
         shutil.rmtree(output["issues_path"])
 
-def find_secrets(repo: Repository, config: SearchConfig) -> List[Secret]:
+def find_secrets(path: str, repo_config: RepoConfig = None,
+                 search_config: SearchConfig = None) -> List[Secret]:
     """Searches for secrets in the repository repo using the search configuration config
        Returns a list of Secret objects, one for each secret found."""
-    if repo.path_type == RepositoryPathType.LOCAL:
+    if git.repo.fun.is_git_dir(path + os.path.sep + ".git"):
+        # Is local repository
+        # If envvironment variable token is present give warning.
         git_url = None
-        repo_path = repo.path
+        repo_path = path
     else:
-        git_url = repo.path
+        # Is remote repository
+        # Append token if present in environment variable
+        git_url = path
         repo_path = None
 
-    do_regex = config.regexes
+    if not repo_config:
+        repo_config = RepoConfig()
+
+    if not search_config:
+        search_config = SearchConfig()
+
+    do_regex = search_config.regexes
 
     output = truffleHog.find_strings(git_url=git_url,
-                                     since_commit=repo.since_commit,
-                                     max_depth=config.max_depth,
+                                     since_commit=repo_config.since_commit,
+                                     max_depth=search_config.max_depth,
                                      do_regex=do_regex,
-                                     do_entropy=config.entropy_checks_enabled,
-                                     custom_regexes=config.regexes,
-                                     branch=repo.branch,
+                                     do_entropy=search_config.entropy_checks_enabled,
+                                     custom_regexes=search_config.regexes,
+                                     branch=repo_config.branch,
                                      repo_path=repo_path,
-                                     path_inclusions=config.include_search_paths,
-                                     path_exclusions=config.exclude_search_paths)
+                                     path_inclusions=search_config.include_search_paths,
+                                     path_exclusions=search_config.exclude_search_paths)
     secrets = _find_strings_to_secrets(output)
     _clean_up(output)
     return secrets

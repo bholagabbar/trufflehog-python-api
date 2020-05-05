@@ -3,8 +3,7 @@ Tests find_secrets methods.
 """
 import unittest
 
-from .context import (Repository, RepositoryPathType,
-                      SearchConfig, find_secrets)
+from .context import (SearchConfig, find_secrets)
 
 class TestFindSecrets(unittest.TestCase):
     """Unit tests for find_secrets method."""
@@ -12,19 +11,15 @@ class TestFindSecrets(unittest.TestCase):
     def test_find_secrets(self):
         """Tests if the output from truffleHog's find_strings can be placed in Secret objects"""
         #output = truffleHog.find_strings(None, repo_path=".", do_entropy=False, do_regex=True)
-        repo = Repository(path=".", path_type=RepositoryPathType.LOCAL)
-        config = SearchConfig()
-
-        secrets = find_secrets(repo, config)
+        secrets = find_secrets(".")
         self.assertIsNot(secrets, [])
 
     def test_secret(self):
         """Tests that the secrets found by the search are correctly represented in the Secret
         object """
-        repo = Repository(path=".", path_type=RepositoryPathType.LOCAL)
         config = SearchConfig(entropy_checks_enabled=False, regexes=SearchConfig.default_regexes())
-        
-        secrets = find_secrets(repo, config)
+
+        secrets = find_secrets(".", search_config=config)
         self.assertIsNot(secrets, [])
 
         found_pgp_secret = False
