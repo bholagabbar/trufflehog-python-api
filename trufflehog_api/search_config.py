@@ -1,11 +1,10 @@
 from copy import copy
-from typing import List
-from typing import Dict
+from typing import List, Dict
 from truffleHogRegexes.regexChecks import regexes as default_regexes
 
 
 class SearchConfig:
-    """Class to hold truffleHog search configurations
+    """Class to hold trufflehog_api's search configurations
     """
 
     def __init__(self, *,
