@@ -1,5 +1,6 @@
 from copy import copy
 from typing import List, Dict
+
 from truffleHogRegexes.regexChecks import regexes as default_regexes
 
 
