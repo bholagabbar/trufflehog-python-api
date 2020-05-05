@@ -19,11 +19,11 @@ class SearchConfig:
 
         :param str max_depth:
             Maximum commit depth to continue search till (default is 1000000)
-        :param str include_search_paths:
+        :param list include_search_paths:
             List of regular expressions restricting search to matching object paths only. At least
             one of these must match a Git object path in order for the repository to be searched
             (default is None, all object paths are searched unless otherwise excluded by search_paths_excluded)
-        :param str exclude_search_paths:
+        :param list exclude_search_paths:
             List of regular expressions restricting search to exclude matching object paths
             (default is None, no object paths are excluded).
         :param str entropy_checks_enabled:
@@ -50,40 +50,32 @@ class SearchConfig:
 
     @property
     def max_depth(self) -> int:
-        """Returns an integer corresponding to the maximum commit depth to continue search till.
-        """
+        """:return: Returns an integer corresponding to the maximum commit depth to continue search till."""
         return self._max_depth
 
     @property
     def include_search_paths(self) -> List[str]:
-        """Returns a copy of the list of regular expressions restricting search to matching object paths only.
-        """
+        """:return: Returns a copy of the list of regexes restricting search to matching object paths only."""
         return copy(self._include_search_paths)
 
     @property
     def exclude_search_paths(self) -> List[str]:
-        """Returns a copy of the list of regular expressions restricting search to exclude matching object paths.
-        """
+        """:return: Returns a copy of the list of regexes restricting search to exclude matching object paths."""
         return copy(self._exclude_search_paths)
 
     @property
     def entropy_checks_enabled(self) -> bool:
-        """Returns a boolean value indicating whether entropy checks are enabled
-        """
+        """:return: Returns a boolean value indicating whether entropy checks are enabled"""
         return self._entropy_checks_enabled
 
     @property
     def regexes(self) -> Dict[str, str]:
-        """Returns a copy of the dict of custom regexes to search search matching project strings against
-        """
+        """:return: Returns a copy of the dict of custom regexes to search search matching project strings against"""
         return copy(self._regexes)
 
     @staticmethod
     def default_regexes() -> Dict[str, str]:
-        """
-        Returns a copy of the prebuilt regex dict provided by truffleHogRegexes
-        populated with regexes corresponding to popular 3rd party API services
-        """
+        """:return: Returns a copy of the prebuilt regex dict provided by truffleHogRegexes"""
         return copy(default_regexes)
 
     def __str__(self):

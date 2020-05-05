@@ -55,37 +55,29 @@ class Repository:
 
     @property
     def path(self) -> str:
-        """Path to access the repository.
-        """
+        """:return: Path to access the repository."""
         return self._path
 
     @property
     def branch(self) -> str:
-        """The specific branch to search for in the repository
-        """
+        """:return: The specific branch to search for in the repository"""
         return self._branch
 
     @property
     def since_commit(self) -> str:
-        """Specific commit ID hash to search upwards from
-        """
+        """:return: Specific commit ID hash to search upwards from"""
         return self._since_commit
 
     @property
     def path_type(self) -> RepositoryPathType:
-        """Indicates whether a repository path is git remote or local filesystem path
-        """
+        """:return: Indicates whether a repository path is git remote or local filesystem path"""
         return self._path_type
 
     def __str__(self):
-        """
-        :return: The repository's path
-        """
+        """:return: The repository's path"""
         return self.path
 
     def __repr__(self):
-        """
-        :return: A string with the repository's path, branch, since_commit and path_type attributes
-        """
+        """:return: A string with the repository's path, branch, since_commit and path_type attributes"""
         return ('Repository(path={0}, branch={1}, since_commit={2}, path_type={3})'
                 .format(self.path_type, str(self.branch), str(self.since_commit), str(self.path_type)))
