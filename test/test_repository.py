@@ -1,5 +1,6 @@
 import unittest
-from .context import Repository
+
+from test.context import Repository
 
 
 class TestRepository(unittest.TestCase):
