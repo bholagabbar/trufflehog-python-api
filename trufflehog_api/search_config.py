@@ -38,7 +38,7 @@ class SearchConfig:
             those character sets in each diff. If at any point a high entropy string >20 characters
             is detected
             (default is True, this is the default secret finding mechanism).
-       
+
         :param dict regexes:
             Use this argument to pass in a custom dictionary of regexes, eg. to search for project
             specific strings. The dictionary has keys as the description of a regex and value as
