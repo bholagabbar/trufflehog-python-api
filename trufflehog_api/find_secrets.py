@@ -87,7 +87,7 @@ class Secret:
         raise NotImplementedError()
 
 
-def _find_strings_to_secrets(output: dict) -> List[Secret]:
+def _convert_default_output_to_secrets(output: dict) -> List[Secret]:
     secrets = []
     issues = output["foundIssues"]
     for issue_file in issues:
@@ -141,7 +141,7 @@ def find_secrets(path: str, repo_config: RepoConfig = None,
                                      repo_path=repo_path,
                                      path_inclusions=search_config.include_search_paths,
                                      path_exclusions=search_config.exclude_search_paths)
-    secrets = _find_strings_to_secrets(output)
+    secrets = _convert_default_output_to_secrets(output)
     _clean_up(output)
     return secrets
     
