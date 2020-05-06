@@ -52,7 +52,7 @@ class TestFindSecrets(unittest.TestCase):
             self.assertTrue("756568e922f868d798949f1d25c5b08292dcc49b" in secret_hashes)
             self.assertTrue("ed8aab163431cbea0886db4961f5f9bde172cdd4" in secret_hashes)
         else:
-            print('TOKEN_ENV_KEY, skipped execution!')
+            print('TOKEN_ENV_KEY not set, skipped execution!')
 
 
 if __name__ == '__main__':

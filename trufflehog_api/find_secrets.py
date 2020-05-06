@@ -166,7 +166,7 @@ def _clean_up(output: dict):
         shutil.rmtree(output["issues_path"])
 
 
-def _append_env_access_token_to_repo_path(path, token_key):
+def _append_env_access_token_to_path(path, token_key):
     idx = path.find("github.com/")
     if idx > -1:
         path = path[:idx] + os.environ.get(token_key) + ":x-oauth-basic@" + path[idx:]
@@ -213,7 +213,7 @@ def find_secrets(path: str,
         # Is repo is remote, append env access if present to the path
         git_url = path
         if token_key and token_key in os.environ:
-            git_url = _append_env_access_token_to_repo_path(path, token_key)
+            git_url = _append_env_access_token_to_path(path, token_key)
         repo_path = None
 
     do_regex = search_config.regexes
