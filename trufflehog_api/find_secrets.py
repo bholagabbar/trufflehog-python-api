@@ -122,9 +122,9 @@ class Secret:
         "commit: {commit},\n"\
         "commit_hash: {commit_hash},\n"\
         "reason: {reason},\n" \
-        "path: {path}".format(commit_time=self._commit_time, 
-        branch_name=self._branch_name, commit=self._commit, 
-        commit_hash=self._commit_hash, diff=self._diff, 
+        "path: {path}".format(commit_time=self._commit_time, \
+        branch_name=self._branch_name, commit=self._commit, \
+        commit_hash=self._commit_hash, \
         reason=self._reason, path=self._path)
 
     def __repr__(self):
@@ -134,11 +134,10 @@ class Secret:
         return "Secret(commit_time={commit_time}, "\
             "branch_name={branch_name}, commit={commit}, "\
             "commit_hash={commit_hash}, diff={diff}, reason={reason}, " \
-            "path={path})".format(
-            commit_time=self._commit_time, branch_name=self._branch_name, 
-            commit=self._commit, commit_hash=self._commit_hash, diff=self._diff, 
-            reason=self._reason, path=self._path
-            )
+            "path={path})".format( \
+            commit_time=self._commit_time, branch_name=self._branch_name, \
+            commit=self._commit, commit_hash=self._commit_hash, diff=self._diff, \
+            reason=self._reason, path=self._path)
 
     def to_dict(self):
         """

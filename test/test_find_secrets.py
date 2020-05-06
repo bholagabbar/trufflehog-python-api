@@ -11,46 +11,47 @@ class TestFindSecrets(unittest.TestCase):
         self.assertIsNot(secrets, [])
 
     def test_secret(self):
-         config = SearchConfig(entropy_checks_enabled=False, regexes=SearchConfig.default_regexes())
+        config = SearchConfig(entropy_checks_enabled=False, regexes=SearchConfig.default_regexes())
 
-         secrets = find_secrets(".", search_config=config)
-         self.assertIsNot(secrets, [])
+        secrets = find_secrets(".", search_config=config)
+        self.assertIsNot(secrets, [])
 
-         found_pgp_secret = False
-         path_to_secret = ''
-         for secret in secrets:
-             if secret.reason == "PGP private key block":
-                 found_pgp_secret = True
-                 path_to_secret = secret.path
+        found_pgp_secret = False
+        path_to_secret = ''
+        for secret in secrets:
+            if secret.reason == "PGP private key block":
+                found_pgp_secret = True
+                path_to_secret = secret.path
 
-         self.assertTrue(found_pgp_secret)
-         self.assertEqual(path_to_secret, "test/resources/test_file.txt")
+        self.assertTrue(found_pgp_secret)
+        self.assertEqual(path_to_secret, "test/resources/test_file.txt")
 
     def test_print_secret(self):
-        secret = Secret(commit_time=datetime.datetime(2020, 9, 16),
-        branch_name="branch", commit="commit", diff="diff",
+        secret = Secret(commit_time=datetime.datetime(2020, 9, 16), \
+        branch_name="branch", commit="commit", diff="diff", \
         commit_hash="commit_hash", reason="reason", path="path")
 
         #Testing str
-        self.assertEqual(str(secret).replace(" ", ""),
-        '''commit_time: 2020-09-16 00:00:00,
+        self.assertEqual(str(secret).replace(" ", ""), \
+        """
+        commit_time: 2020-09-16 00:00:00,
         branch_name: branch,
         commit: commit,
         commit_hash: commit_hash,
         reason: reason,
-        path: path'''.replace(" ", ""))
+        path: path
+        """.replace(" ", ""))
 
         #Testing repr
-        self.assertEqual(repr(secret).replace(" ",""), 
+        self.assertEqual(repr(secret).replace(" ", ""), \
         "Secret(commit_time=2020-09-16 00:00:00, " \
         "branch_name=branch, commit=commit, commit_hash=commit_hash, " \
-        "diff=diff, reason=reason, path=path)"
+        "diff=diff, reason=reason, path=path)" \
         .replace(" ", ""))
 
     def test_dict(self):
-
-        secret = Secret(commit_time=datetime.datetime(2020, 9, 16), 
-        branch_name="branch", commit="commit", diff="diff",
+        secret = Secret(commit_time=datetime.datetime(2020, 9, 16), \
+        branch_name="branch", commit="commit", diff="diff", \
         commit_hash="commit_hash", reason="reason", path="path")
         secret_dict = secret.to_dict()
         self.assertEqual(secret_dict["commit_time"], secret.commit_time)

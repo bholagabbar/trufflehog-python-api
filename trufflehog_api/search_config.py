@@ -38,7 +38,7 @@ class SearchConfig:
             those character sets in each diff. If at any point a high entropy string >20 characters
             is detected
             (default is True, this is the default secret finding mechanism).
-            
+       
         :param dict regexes:
             Use this argument to pass in a custom dictionary of regexes, eg. to search for project
             specific strings. The dictionary has keys as the description of a regex and value as
@@ -109,18 +109,18 @@ class SearchConfig:
         """
         Takes a json string with the desire configuration and generates a SearchConfig object
 
-        :param str input_config: 
+        :param str input_config:
             The json string containing the configuration
 
-        :return: Returns a SearchConfig from the a json string 
-        """ 
+        :return: Returns a SearchConfig from the a json string
+        """
         config_dict = json.loads(input_config, strict=False)
         max_depth = 1000000
         include_search_paths = None
         exclude_search_paths = None
         entropy_checks_enabled = True
         regexes = None
-               
+
         if "max_depth" in config_dict:
             max_depth = int(config_dict["max_depth"])
         if "include_search_paths" in config_dict:
@@ -132,11 +132,11 @@ class SearchConfig:
         if "regexes" in config_dict:
             regexes = config_dict.get("regexes")
 
-        config = SearchConfig(
-                 max_depth=max_depth,
-                 include_search_paths=include_search_paths,
-                 exclude_search_paths=exclude_search_paths,
-                 entropy_checks_enabled=entropy_checks_enabled,
+        config = SearchConfig( \
+                 max_depth=max_depth, \
+                 include_search_paths=include_search_paths, \
+                 exclude_search_paths=exclude_search_paths, \
+                 entropy_checks_enabled=entropy_checks_enabled, \
                  regexes=regexes,
                  )
 
@@ -164,10 +164,10 @@ class SearchConfig:
             "include_search_paths={incl_search_paths},"\
             "exclude_search_paths={excl_search_paths},"\
             "entropy_checks_enabled={entropy_enabled},"\
-            "regexes={regexes})").format(max_depth=str(self._max_depth),
-            entropy_enabled=str(self._entropy_checks_enabled),
-            incl_search_paths=str(self._include_search_paths),
-            excl_search_paths=str(self._exclude_search_paths),
+            "regexes={regexes})").format(max_depth=str(self._max_depth), \
+            entropy_enabled=str(self._entropy_checks_enabled), \
+            incl_search_paths=str(self._include_search_paths), \
+            excl_search_paths=str(self._exclude_search_paths), \
             regexes=str(self._regexes))
 
     def to_dict(self):
@@ -183,14 +183,13 @@ class SearchConfig:
         return config_dict
 
     @staticmethod
-    def from_dict(input_config: dict): 
-        
+    def from_dict(input_config: dict):
         """
         Takes in a dictionary with the search configurations correctly formatted
         and generates a SearchConfig object
 
         :param dict input_config
-            The search configurations in the form of a dictionary. 
+            The search configurations in the form of a dictionary.
         :return: Returns the object containing all the attributes specified in the dict
         """
 
@@ -200,7 +199,7 @@ class SearchConfig:
         exclude_search_paths = None
         entropy_checks_enabled = True
         regexes = None
-               
+
         if "max_depth" in config_dict:
             max_depth = int(config_dict["max_depth"])
         if "include_search_paths" in config_dict:
@@ -212,11 +211,11 @@ class SearchConfig:
         if "regexes" in config_dict:
             regexes = config_dict.get("regexes")
 
-        config = SearchConfig(
-                 max_depth=max_depth,
-                 include_search_paths=include_search_paths,
-                 exclude_search_paths=exclude_search_paths,
-                 entropy_checks_enabled=entropy_checks_enabled,
+        config = SearchConfig( \
+                 max_depth=max_depth, \
+                 include_search_paths=include_search_paths, \
+                 exclude_search_paths=exclude_search_paths, \
+                 entropy_checks_enabled=entropy_checks_enabled, \
                  regexes=regexes,
                  )
 
