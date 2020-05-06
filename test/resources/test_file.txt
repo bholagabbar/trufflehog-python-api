@@ -1,8 +1,9 @@
 test_file
 
+
 -----BEGIN RSA PRIVATE KEY-----
 ABdeGfdeadfaselsfefsefefkelfeks
 
-
 -----BEGIN PGP PRIVATE KEY BLOCK-----
 sfjahkljhfsflskjf;kdskdfsdkfj;
+
