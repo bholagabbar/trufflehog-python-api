@@ -3,10 +3,6 @@
 
 [![Build Status](https://travis-ci.com/cakeid/17480-Final-Project.svg?token=x1jLGpFqhXWPzfonGfC3&branch=master)](https://travis-ci.com/cakeid/17480-Final-Project)
 
-## Folder structure
-
-Ken Reitz's python repository structure recommendation ([Link](https://www.kennethreitz.org/essays/repository-structure-and-python))
-
 ## Setup
 * `virtualenv -p python3 venv` if you do not have a venv for the project.
 * `source venv/bin/activate` activates the virtual env.
@@ -15,23 +11,20 @@ Ken Reitz's python repository structure recommendation ([Link](https://www.kenne
 ## Tests
 Runs all tests - `python3 -m unittest discover -v`
 
-## Requirements
-https://github.com/cakeid/17480-Final-Project/wiki/Requirements-Document
-
-## API Sketch
-TODO
-
-## Applying to usecases
-Sample client code with skeleton
-
-## API Final Draft
-Link to folder
-
 ## Documentation
 * `pdoc` is installed when you run `pip install -r requirements-dev.txt`
 * Generate docs with `PYTHONPATH=. pdoc trufflehog_api --all-submodules --html --html-dir=docs/ --overwrite && 'cp' -rf docs/trufflehog_api/* docs/ && rm -rf docs/trufflehog_api`
 
 Docs are visible in the `/docs/` folder.
+
+## Requirements
+https://github.com/cakeid/17480-Final-Project/wiki/Requirements-Document
+
+## Usage examples
+Sample client code being applied to usecases can be found in the `/examples` folder
+
+## API Drafts
+TODO - Add sketch here as V1 itself
 
 ## Issues list
 https://github.com/cakeid/17480-Final-Project/issues
