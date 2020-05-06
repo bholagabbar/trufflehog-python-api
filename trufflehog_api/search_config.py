@@ -19,14 +19,17 @@ class SearchConfig:
 
         :param str max_depth:
             Maximum commit depth to continue search till (default is 1000000)
+
         :param list include_search_paths:
             List of regular expressions restricting search to matching object paths only. At least
             one of these must match a Git object path in order for the repository to be searched
             (default is None, all object paths are searched unless otherwise excluded by
             search_paths_excluded)
+
         :param list exclude_search_paths:
             List of regular expressions restricting search to exclude matching object paths
             (default is None, no object paths are excluded).
+
         :param str entropy_checks_enabled:
             Enable high signal entropy checks, this is the default secret finding mechanism of the
             library. truffleHog will evaluate the shannon entropy for both the base64 char set and
@@ -34,6 +37,7 @@ class SearchConfig:
             those character sets in each diff. If at any point a high entropy string >20 characters
             is detected
             (default is True, this is the default secret finding mechanism).
+            
         :param dict regexes:
             Use this argument to pass in a custom dictionary of regexes, eg. to search for project
             specific strings. The dictionary has keys as the description of a regex and value as
