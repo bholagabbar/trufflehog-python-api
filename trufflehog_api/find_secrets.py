@@ -8,9 +8,10 @@ import datetime
 import json
 import os
 import shutil
+import warnings
 from typing import List
-import git
 
+from git.repo.fun import is_git_dir
 from truffleHog import truffleHog
 
 from trufflehog_api.repo_config import RepoConfig
@@ -151,6 +152,7 @@ def _convert_default_output_to_secrets(output: dict) -> List[Secret]:
             secrets.append(secret)
     return secrets
 
+
 def _clean_up(output: dict):
     """
     Removes files containing the output from truffleHog.find_strings()
@@ -163,7 +165,16 @@ def _clean_up(output: dict):
     if issues_path and os.path.isdir(issues_path):
         shutil.rmtree(output["issues_path"])
 
-def find_secrets(path: str, repo_config: RepoConfig = None,
+
+def _append_env_access_token_to_path(path, token_key):
+    idx = path.find("github.com/")
+    if idx > -1:
+        path = path[:idx] + os.environ.get(token_key) + ":x-oauth-basic@" + path[idx:]
+    return path
+
+
+def find_secrets(path: str,
+                 repo_config: RepoConfig = None,
                  search_config: SearchConfig = None) -> List[Secret]:
     """
     Searches for secrets in the repository repo using the search configuration config
@@ -181,22 +192,28 @@ def find_secrets(path: str, repo_config: RepoConfig = None,
 
     :return: list of secret objects that represent the secrets found by the search
     """
-    if git.repo.fun.is_git_dir(path + os.path.sep + ".git"):
-        # Is local repository
-        # If environment variable token is present give warning.
-        git_url = None
-        repo_path = path
-    else:
-        # Is remote repository
-        # Append token if present in environment variable
-        git_url = path
-        repo_path = None
 
     if not repo_config:
         repo_config = RepoConfig()
 
     if not search_config:
         search_config = SearchConfig()
+
+    token_key = repo_config.access_token_env_key
+
+    if is_git_dir(path + os.path.sep + ".git"):
+        # Is repo is local repository and env access token is present, display warning.
+        if token_key and token_key in os.environ:
+            warnings.warn("Warning: local repository path provided with an access token - "
+                          "Token will be ignored")
+        git_url = None
+        repo_path = path
+    else:
+        # Is repo is remote, append env access if present to the path
+        git_url = path
+        if token_key and token_key in os.environ:
+            git_url = _append_env_access_token_to_path(path, token_key)
+        repo_path = None
 
     do_regex = search_config.regexes
 
@@ -213,4 +230,3 @@ def find_secrets(path: str, repo_config: RepoConfig = None,
     secrets = _convert_default_output_to_secrets(output)
     _clean_up(output)
     return secrets
-    
