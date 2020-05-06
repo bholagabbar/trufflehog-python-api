@@ -3,8 +3,9 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 
-    <title>trufflehog_api.repository API documentation</title>
-    <meta name="description" content="" />
+    <title>trufflehog_api.repo_config API documentation</title>
+    <meta name="description" content="Contains the RepoConfig class that specifies attributes for a repository
+when searching for secrets...." />
 
   <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300' rel='stylesheet' type='text/css'>
   
@@ -974,18 +975,14 @@ table {
     <li class="set"><h3><a href="#header-classes">Classes</a></h3>
       <ul>
         <li class="mono">
-        <span class="class_name"><a href="#trufflehog_api.repository.Repository">Repository</a></span>
+        <span class="class_name"><a href="#trufflehog_api.repo_config.RepoConfig">RepoConfig</a></span>
         
           
   <ul>
-    <li class="mono"><a href="#trufflehog_api.repository.Repository.__init__">__init__</a></li>
-    <li class="mono"><a href="#trufflehog_api.repository.Repository.from_repository">from_repository</a></li>
+    <li class="mono"><a href="#trufflehog_api.repo_config.RepoConfig.__init__">__init__</a></li>
+    <li class="mono"><a href="#trufflehog_api.repo_config.RepoConfig.from_repo_config">from_repo_config</a></li>
   </ul>
 
-        </li>
-        <li class="mono">
-        <span class="class_name"><a href="#trufflehog_api.repository.RepositoryPathType">RepositoryPathType</a></span>
-        
         </li>
       </ul>
     </li>
@@ -1001,78 +998,61 @@ table {
 
 
   <header id="section-intro">
-  <h1 class="title"><span class="name">trufflehog_api.repository</span> module</h1>
+  <h1 class="title"><span class="name">trufflehog_api.repo_config</span> module</h1>
+  <p>Contains the RepoConfig class that specifies attributes for a repository
+when searching for secrets.</p>
   
-  
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-trufflehog_api.repository', this);">Show source &equiv;</a></p>
-  <div id="source-trufflehog_api.repository" class="source">
-    <pre><code>from enum import Enum
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-trufflehog_api.repo_config', this);">Show source &equiv;</a></p>
+  <div id="source-trufflehog_api.repo_config" class="source">
+    <pre><code>"""
+Contains the RepoConfig class that specifies attributes for a repository
+when searching for secrets.
+"""
 
-
-class RepositoryPathType(Enum):
-    """Indicates whether a repository path is a remote git url or local filesystem path
-    """
-    REMOTE = 'REMOTE'
-    LOCAL = 'LOCAL'
-
-
-class Repository:
+class RepoConfig:
     """Class to encapsulate details of a Git repository to search secrets in.
     """
 
     def __init__(self, *,
-                 path: str,
                  branch: str = None,
-                 since_commit: str = None,
-                 path_type: RepositoryPathType = RepositoryPathType.REMOTE):
-        """Creates a new repository
+                 since_commit: str = None):
+        """Creates a new RepoConfig object
 
-        :param str path:
-            Path of the repository.
         :param str branch:
             Branch to restrict search to
             (default is None, all branches searched)
+
         :param str since_commit:
             Optional commit ID hash to search upwards from
             (default is None, all commits searched)
-        :param RepositoryPathType path_type:
-            Indicates type of the repository
-            (default is RepositoryPathType.REMOTE)
         """
-        self._path: str = path
         self._branch: str = branch
         self._since_commit: str = since_commit
-        self._path_type: RepositoryPathType = path_type
 
     @classmethod
-    def from_repository(cls, repository, branch: str = None, since_commit: str = None):
-        """Static factor method which creates a new repository from an existing repository,
+    def from_repo_config(cls, repoconfig, branch: str = None, since_commit: str = None):
+        """Static factory method which creates a new RepoConfig object from an existing repoconfig,
         allowing user to override branch and since_commit attributes
 
-        :param Repository repository:
-            Repository object to copy attributes over from.
-            (default is None)
+        :param RepoConfig repoconfig:
+            RepoConfig object to copy attributes over from
+
         :param str branch:
-            Overridden value for branch to set.
+            Overridden value for branch to set
             (default is None)
+
         :param str since_commit:
-            Overridden value for since_commit to set.
+            Overridden value for since_commit to set
             (default is None)
-        :return: An Repository object which is a deep copy of the repository parameter passed
+
+        :return: An RepoConfig object which is a deep copy of the repoconfig parameter passed
         with optionally overridden passed values.
         """
-        branch_to_set = branch if branch else repository.branch
-        since_commit_to_set = since_commit if since_commit else repository.since_commit
+        branch_to_set = branch if branch else repoconfig.branch
+        since_commit_to_set = since_commit if since_commit else repoconfig.since_commit
 
-        return cls(path=repository.path, path_type=repository.path_type, branch=branch_to_set,
+        return cls(branch=branch_to_set,
                    since_commit=since_commit_to_set)
-
-    @property
-    def path(self) -> str:
-        """
-        :return: Path to access the repository.
-        """
-        return self._path
 
     @property
     def branch(self) -> str:
@@ -1088,27 +1068,17 @@ class Repository:
         """
         return self._since_commit
 
-    @property
-    def path_type(self) -> RepositoryPathType:
-        """
-        :return: Indicates whether a repository path is git remote or local filesystem path
-        """
-        return self._path_type
 
     def __str__(self):
-        """
-        :return: The repository's path
-        """
-        return self.path
+        raise NotImplementedError()
 
     def __repr__(self):
         """
-        :return: A string with the repository's path, branch, since_commit
-        and path_type attributes
+        :return: A string with the repoconfig's branch and since_commit
+        attributes
         """
-        return ('Repository(path={0}, branch={1}, since_commit={2}, path_type={3})'
-                .format(self.path_type, str(self.branch), str(self.since_commit),
-                        str(self.path_type)))
+        return ('RepoConfig(branch={0}, since_commit={1})'
+                .format(str(self.branch), str(self.since_commit)))
 </code></pre>
   </div>
 
@@ -1120,70 +1090,57 @@ class Repository:
     <h2 class="section-title" id="header-classes">Classes</h2>
       
       <div class="item">
-      <p id="trufflehog_api.repository.Repository" class="name">class <span class="ident">Repository</span></p>
+      <p id="trufflehog_api.repo_config.RepoConfig" class="name">class <span class="ident">RepoConfig</span></p>
       
   
     <div class="desc"><p>Class to encapsulate details of a Git repository to search secrets in.</p></div>
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-trufflehog_api.repository.Repository', this);">Show source &equiv;</a></p>
-  <div id="source-trufflehog_api.repository.Repository" class="source">
-    <pre><code>class Repository:
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-trufflehog_api.repo_config.RepoConfig', this);">Show source &equiv;</a></p>
+  <div id="source-trufflehog_api.repo_config.RepoConfig" class="source">
+    <pre><code>class RepoConfig:
     """Class to encapsulate details of a Git repository to search secrets in.
     """
 
     def __init__(self, *,
-                 path: str,
                  branch: str = None,
-                 since_commit: str = None,
-                 path_type: RepositoryPathType = RepositoryPathType.REMOTE):
-        """Creates a new repository
+                 since_commit: str = None):
+        """Creates a new RepoConfig object
 
-        :param str path:
-            Path of the repository.
         :param str branch:
             Branch to restrict search to
             (default is None, all branches searched)
+
         :param str since_commit:
             Optional commit ID hash to search upwards from
             (default is None, all commits searched)
-        :param RepositoryPathType path_type:
-            Indicates type of the repository
-            (default is RepositoryPathType.REMOTE)
         """
-        self._path: str = path
         self._branch: str = branch
         self._since_commit: str = since_commit
-        self._path_type: RepositoryPathType = path_type
 
     @classmethod
-    def from_repository(cls, repository, branch: str = None, since_commit: str = None):
-        """Static factor method which creates a new repository from an existing repository,
+    def from_repo_config(cls, repoconfig, branch: str = None, since_commit: str = None):
+        """Static factory method which creates a new RepoConfig object from an existing repoconfig,
         allowing user to override branch and since_commit attributes
 
-        :param Repository repository:
-            Repository object to copy attributes over from.
-            (default is None)
+        :param RepoConfig repoconfig:
+            RepoConfig object to copy attributes over from
+
         :param str branch:
-            Overridden value for branch to set.
+            Overridden value for branch to set
             (default is None)
+
         :param str since_commit:
-            Overridden value for since_commit to set.
+            Overridden value for since_commit to set
             (default is None)
-        :return: An Repository object which is a deep copy of the repository parameter passed
+
+        :return: An RepoConfig object which is a deep copy of the repoconfig parameter passed
         with optionally overridden passed values.
         """
-        branch_to_set = branch if branch else repository.branch
-        since_commit_to_set = since_commit if since_commit else repository.since_commit
+        branch_to_set = branch if branch else repoconfig.branch
+        since_commit_to_set = since_commit if since_commit else repoconfig.since_commit
 
-        return cls(path=repository.path, path_type=repository.path_type, branch=branch_to_set,
+        return cls(branch=branch_to_set,
                    since_commit=since_commit_to_set)
-
-    @property
-    def path(self) -> str:
-        """
-        :return: Path to access the repository.
-        """
-        return self._path
 
     @property
     def branch(self) -> str:
@@ -1199,27 +1156,17 @@ class Repository:
         """
         return self._since_commit
 
-    @property
-    def path_type(self) -> RepositoryPathType:
-        """
-        :return: Indicates whether a repository path is git remote or local filesystem path
-        """
-        return self._path_type
 
     def __str__(self):
-        """
-        :return: The repository's path
-        """
-        return self.path
+        raise NotImplementedError()
 
     def __repr__(self):
         """
-        :return: A string with the repository's path, branch, since_commit
-        and path_type attributes
+        :return: A string with the repoconfig's branch and since_commit
+        attributes
         """
-        return ('Repository(path={0}, branch={1}, since_commit={2}, path_type={3})'
-                .format(self.path_type, str(self.branch), str(self.since_commit),
-                        str(self.path_type)))
+        return ('RepoConfig(branch={0}, since_commit={1})'
+                .format(str(self.branch), str(self.since_commit)))
 </code></pre>
   </div>
 </div>
@@ -1228,56 +1175,42 @@ class Repository:
       <div class="class">
           <h3>Ancestors (in MRO)</h3>
           <ul class="class_list">
-          <li><a href="#trufflehog_api.repository.Repository">Repository</a></li>
+          <li><a href="#trufflehog_api.repo_config.RepoConfig">RepoConfig</a></li>
           <li>builtins.object</li>
           </ul>
           <h3>Static methods</h3>
             
   <div class="item">
-    <div class="name def" id="trufflehog_api.repository.Repository.__init__">
+    <div class="name def" id="trufflehog_api.repo_config.RepoConfig.__init__">
     <p>def <span class="ident">__init__</span>(</p><p>self)</p>
     </div>
     
 
     
   
-    <div class="desc"><p>Creates a new repository</p>
-<p>:param str path:
-    Path of the repository.
-:param str branch:
+    <div class="desc"><p>Creates a new RepoConfig object</p>
+<p>:param str branch:
     Branch to restrict search to
-    (default is None, all branches searched)
-:param str since_commit:
+    (default is None, all branches searched)</p>
+<p>:param str since_commit:
     Optional commit ID hash to search upwards from
-    (default is None, all commits searched)
-:param RepositoryPathType path_type:
-    Indicates type of the repository
-    (default is RepositoryPathType.REMOTE)</p></div>
+    (default is None, all commits searched)</p></div>
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-trufflehog_api.repository.Repository.__init__', this);">Show source &equiv;</a></p>
-  <div id="source-trufflehog_api.repository.Repository.__init__" class="source">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-trufflehog_api.repo_config.RepoConfig.__init__', this);">Show source &equiv;</a></p>
+  <div id="source-trufflehog_api.repo_config.RepoConfig.__init__" class="source">
     <pre><code>def __init__(self, *,
-             path: str,
              branch: str = None,
-             since_commit: str = None,
-             path_type: RepositoryPathType = RepositoryPathType.REMOTE):
-    """Creates a new repository
-    :param str path:
-        Path of the repository.
+             since_commit: str = None):
+    """Creates a new RepoConfig object
     :param str branch:
         Branch to restrict search to
         (default is None, all branches searched)
     :param str since_commit:
         Optional commit ID hash to search upwards from
         (default is None, all commits searched)
-    :param RepositoryPathType path_type:
-        Indicates type of the repository
-        (default is RepositoryPathType.REMOTE)
     """
-    self._path: str = path
     self._branch: str = branch
     self._since_commit: str = since_commit
-    self._path_type: RepositoryPathType = path_type
 </code></pre>
   </div>
 </div>
@@ -1286,7 +1219,7 @@ class Repository:
   
           <h3>Instance variables</h3>
             <div class="item">
-            <p id="trufflehog_api.repository.Repository.branch" class="name">var <span class="ident">branch</span></p>
+            <p id="trufflehog_api.repo_config.RepoConfig.branch" class="name">var <span class="ident">branch</span></p>
             
 
             
@@ -1297,29 +1230,7 @@ class Repository:
 
             </div>
             <div class="item">
-            <p id="trufflehog_api.repository.Repository.path" class="name">var <span class="ident">path</span></p>
-            
-
-            
-  
-    <div class="desc"><p>:return: Path to access the repository.</p></div>
-  <div class="source_cont">
-</div>
-
-            </div>
-            <div class="item">
-            <p id="trufflehog_api.repository.Repository.path_type" class="name">var <span class="ident">path_type</span></p>
-            
-
-            
-  
-    <div class="desc"><p>:return: Indicates whether a repository path is git remote or local filesystem path</p></div>
-  <div class="source_cont">
-</div>
-
-            </div>
-            <div class="item">
-            <p id="trufflehog_api.repository.Repository.since_commit" class="name">var <span class="ident">since_commit</span></p>
+            <p id="trufflehog_api.repo_config.RepoConfig.since_commit" class="name">var <span class="ident">since_commit</span></p>
             
 
             
@@ -1332,48 +1243,46 @@ class Repository:
           <h3>Methods</h3>
             
   <div class="item">
-    <div class="name def" id="trufflehog_api.repository.Repository.from_repository">
-    <p>def <span class="ident">from_repository</span>(</p><p>cls, repository, branch=None, since_commit=None)</p>
+    <div class="name def" id="trufflehog_api.repo_config.RepoConfig.from_repo_config">
+    <p>def <span class="ident">from_repo_config</span>(</p><p>cls, repoconfig, branch=None, since_commit=None)</p>
     </div>
     
 
     
   
-    <div class="desc"><p>Static factor method which creates a new repository from an existing repository,
+    <div class="desc"><p>Static factory method which creates a new RepoConfig object from an existing repoconfig,
 allowing user to override branch and since_commit attributes</p>
-<p>:param Repository repository:
-    Repository object to copy attributes over from.
-    (default is None)
-:param str branch:
-    Overridden value for branch to set.
-    (default is None)
-:param str since_commit:
-    Overridden value for since_commit to set.
-    (default is None)
-:return: An Repository object which is a deep copy of the repository parameter passed
+<p>:param RepoConfig repoconfig:
+    RepoConfig object to copy attributes over from</p>
+<p>:param str branch:
+    Overridden value for branch to set
+    (default is None)</p>
+<p>:param str since_commit:
+    Overridden value for since_commit to set
+    (default is None)</p>
+<p>:return: An RepoConfig object which is a deep copy of the repoconfig parameter passed
 with optionally overridden passed values.</p></div>
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-trufflehog_api.repository.Repository.from_repository', this);">Show source &equiv;</a></p>
-  <div id="source-trufflehog_api.repository.Repository.from_repository" class="source">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-trufflehog_api.repo_config.RepoConfig.from_repo_config', this);">Show source &equiv;</a></p>
+  <div id="source-trufflehog_api.repo_config.RepoConfig.from_repo_config" class="source">
     <pre><code>@classmethod
-def from_repository(cls, repository, branch: str = None, since_commit: str = None):
-    """Static factor method which creates a new repository from an existing repository,
+def from_repo_config(cls, repoconfig, branch: str = None, since_commit: str = None):
+    """Static factory method which creates a new RepoConfig object from an existing repoconfig,
     allowing user to override branch and since_commit attributes
-    :param Repository repository:
-        Repository object to copy attributes over from.
-        (default is None)
+    :param RepoConfig repoconfig:
+        RepoConfig object to copy attributes over from
     :param str branch:
-        Overridden value for branch to set.
+        Overridden value for branch to set
         (default is None)
     :param str since_commit:
-        Overridden value for since_commit to set.
+        Overridden value for since_commit to set
         (default is None)
-    :return: An Repository object which is a deep copy of the repository parameter passed
+    :return: An RepoConfig object which is a deep copy of the repoconfig parameter passed
     with optionally overridden passed values.
     """
-    branch_to_set = branch if branch else repository.branch
-    since_commit_to_set = since_commit if since_commit else repository.since_commit
-    return cls(path=repository.path, path_type=repository.path_type, branch=branch_to_set,
+    branch_to_set = branch if branch else repoconfig.branch
+    since_commit_to_set = since_commit if since_commit else repoconfig.since_commit
+    return cls(branch=branch_to_set,
                since_commit=since_commit_to_set)
 </code></pre>
   </div>
@@ -1381,75 +1290,6 @@ def from_repository(cls, repository, branch: str = None, since_commit: str = Non
 
   </div>
   
-      </div>
-      </div>
-      
-      <div class="item">
-      <p id="trufflehog_api.repository.RepositoryPathType" class="name">class <span class="ident">RepositoryPathType</span></p>
-      
-  
-    <div class="desc"><p>Indicates whether a repository path is a remote git url or local filesystem path</p></div>
-  <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-trufflehog_api.repository.RepositoryPathType', this);">Show source &equiv;</a></p>
-  <div id="source-trufflehog_api.repository.RepositoryPathType" class="source">
-    <pre><code>class RepositoryPathType(Enum):
-    """Indicates whether a repository path is a remote git url or local filesystem path
-    """
-    REMOTE = 'REMOTE'
-    LOCAL = 'LOCAL'
-</code></pre>
-  </div>
-</div>
-
-
-      <div class="class">
-          <h3>Ancestors (in MRO)</h3>
-          <ul class="class_list">
-          <li><a href="#trufflehog_api.repository.RepositoryPathType">RepositoryPathType</a></li>
-          <li>enum.Enum</li>
-          <li>builtins.object</li>
-          </ul>
-          <h3>Class variables</h3>
-            <div class="item">
-            <p id="trufflehog_api.repository.RepositoryPathType.LOCAL" class="name">var <span class="ident">LOCAL</span></p>
-            
-
-            
-  
-  <div class="source_cont">
-</div>
-
-            </div>
-            <div class="item">
-            <p id="trufflehog_api.repository.RepositoryPathType.REMOTE" class="name">var <span class="ident">REMOTE</span></p>
-            
-
-            
-  
-  <div class="source_cont">
-</div>
-
-            </div>
-            <div class="item">
-            <p id="trufflehog_api.repository.RepositoryPathType.name" class="name">var <span class="ident">name</span></p>
-            
-
-            
-  
-  <div class="source_cont">
-</div>
-
-            </div>
-            <div class="item">
-            <p id="trufflehog_api.repository.RepositoryPathType.value" class="name">var <span class="ident">value</span></p>
-            
-
-            
-  
-  <div class="source_cont">
-</div>
-
-            </div>
       </div>
       </div>
 
