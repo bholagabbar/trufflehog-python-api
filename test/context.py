@@ -1,3 +1,11 @@
+"""An import context for our test cases.
+
+This allows the tests to exist outside of our packaged module (see [1]).
+
+[1] https://kenreitz.org/essays/repository-structure-and-python
+"""
+# pylint: disable=unused-import, wrong-import-position
+
 from __future__ import absolute_import
 
 import os
