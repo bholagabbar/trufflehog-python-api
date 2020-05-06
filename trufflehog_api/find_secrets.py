@@ -179,7 +179,7 @@ def find_secrets(path: str, repo_config: RepoConfig = None,
         Configuration object to specify other attributes for the search that can be
         generalized to many searches
 
-        :return: list of secret objects that represent the secrets found by the search
+    :return: list of secret objects that represent the secrets found by the search
     """
     if git.repo.fun.is_git_dir(path + os.path.sep + ".git"):
         # Is local repository
