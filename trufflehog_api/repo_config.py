@@ -99,7 +99,7 @@ class RepoConfig:
 
     def __repr__(self):
         """
-        :return: A string with the repoconfig's branch and since_commit
+        :return: A string listing out the RepoConfig object's attributes
         attributes
         """
         return ('RepoConfig(branch={0}, since_commit={1}, access_token_env_key={2})'
