@@ -10,7 +10,7 @@ class RepoConfig:
     def __init__(self, *,
                  branch: str = None,
                  since_commit: str = None):
-        """Creates a new RepoConfig
+        """Creates a new RepoConfig object
 
         :param str branch:
             Branch to restrict search to
@@ -25,7 +25,7 @@ class RepoConfig:
 
     @classmethod
     def from_repo_config(cls, repoconfig, branch: str = None, since_commit: str = None):
-        """Static factory method which creates a new RepoConfig from an existing repoconfig,
+        """Static factory method which creates a new RepoConfig object from an existing repoconfig,
         allowing user to override branch and since_commit attributes
 
         :param RepoConfig repoconfig:
