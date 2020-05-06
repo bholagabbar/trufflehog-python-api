@@ -114,7 +114,7 @@ def find_secrets(path: str, repo_config: RepoConfig = None,
        Returns a list of Secret objects, one for each secret found."""
     if git.repo.fun.is_git_dir(path + os.path.sep + ".git"):
         # Is local repository
-        # If envvironment variable token is present give warning.
+        # If environment variable token is present give warning.
         git_url = None
         repo_path = path
     else:

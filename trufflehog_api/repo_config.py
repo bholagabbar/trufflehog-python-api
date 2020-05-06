@@ -24,7 +24,7 @@ class RepoConfig:
 
     @classmethod
     def from_repo_config(cls, repoconfig, branch: str = None, since_commit: str = None):
-        """Static factor method which creates a new repoconfig from an existing repoconfig.
+        """Static factory method which creates a new RepoConfig from an existing repoconfig.
         allowing user to override branch and since_commit attributes
 
         :param RepoConfig repoconfig:
