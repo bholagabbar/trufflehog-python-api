@@ -79,28 +79,28 @@ class Secret:
     @property
     def commit(self) -> str:
         """
-        :return commit where the secret was found
+        :return: commit where the secret was found
         """
         return self._commit
 
     @property
     def diff(self) -> str:
         """
-        :return git diff where secret can be found
+        :return: git diff where secret can be found
         """
         return self._diff
 
     @property
     def commit_hash(self) -> str:
         """
-        :return commit hash for the commit where the secret was found
+        :return: commit hash for the commit where the secret was found
         """
         return self._commit_hash
 
     @property
     def reason(self) -> str:
         """
-        :return reason why the secret was flagged
+        :return: reason why the secret was flagged
         (Eg. regex description or High Entropy)
         """
         return self._reason
@@ -108,7 +108,7 @@ class Secret:
     @property
     def path(self) -> str:
         """
-        :return path to file in which secret can be found
+        :return: path to file in which secret can be found
         """
         return self._path
 
@@ -134,7 +134,7 @@ def _convert_default_output_to_secrets(output: dict) -> List[Secret]:
     :param dict output:
         Output from truffleHog.find_strings()
 
-    :return List of Secret Objects
+    :return: List of Secret Objects
     """
     secrets = []
     issues = output["foundIssues"]
@@ -179,7 +179,7 @@ def find_secrets(path: str, repo_config: RepoConfig = None,
         Configuration object to specify other attributes for the search that can be
         generalized to many searches
 
-        :return list of secret objects that represent the secrets found by the search
+    :return: list of secret objects that represent the secrets found by the search
     """
     if git.repo.fun.is_git_dir(path + os.path.sep + ".git"):
         # Is local repository
