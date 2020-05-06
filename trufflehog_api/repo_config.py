@@ -10,11 +10,12 @@ class RepoConfig:
     def __init__(self, *,
                  branch: str = None,
                  since_commit: str = None):
-        """Creates a new repoconfig
+        """Creates a new RepoConfig object
 
         :param str branch:
             Branch to restrict search to
             (default is None, all branches searched)
+
         :param str since_commit:
             Optional commit ID hash to search upwards from
             (default is None, all commits searched)
@@ -24,17 +25,20 @@ class RepoConfig:
 
     @classmethod
     def from_repo_config(cls, repoconfig, branch: str = None, since_commit: str = None):
-        """Static factory method which creates a new RepoConfig from an existing repoconfig.
+        """Static factory method which creates a new RepoConfig object from an existing repoconfig,
         allowing user to override branch and since_commit attributes
 
         :param RepoConfig repoconfig:
-            RepoConfig object to copy attributes over from.
+            RepoConfig object to copy attributes over from
+
         :param str branch:
-            Overridden value for branch to set.
+            Overridden value for branch to set
             (default is None)
+
         :param str since_commit:
-            Overridden value for since_commit to set.
+            Overridden value for since_commit to set
             (default is None)
+
         :return: An RepoConfig object which is a deep copy of the repoconfig parameter passed
         with optionally overridden passed values.
         """
