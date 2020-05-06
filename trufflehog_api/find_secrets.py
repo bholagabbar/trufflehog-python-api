@@ -175,8 +175,7 @@ def _append_env_access_token_to_path(path, token_key):
 
 def find_secrets(path: str,
                  repo_config: RepoConfig = None,
-                 search_config: SearchConfig = None,
-                 ) -> List[Secret]:
+                 search_config: SearchConfig = None) -> List[Secret]:
     """
     Searches for secrets in the repository repo using the search configuration config
        Returns a list of Secret objects, one for each secret found.
