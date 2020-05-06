@@ -49,24 +49,31 @@ class TestSearchConfig(unittest.TestCase):
         search_config = SearchConfig(max_depth=10,entropy_checks_enabled=False,
         include_search_paths=include_search_paths, exclude_search_paths=exclude_search_paths, 
         regexes=regexes)
-        self.assertTrue(str(search_config),
+        self.assertTrue(str(search_config).replace(" ", ""),
         '''
         {
-        max_depth: 10,
-        entropy_checks_enabled: False,
-        include_search_paths: ['*.py'],
-        exclude_search_paths: ['/docs'],
-        regexes: {'random': '.*'}
+        "max_depth": 10,
+        "entropy_checks_enabled": false,
+        "include_search_paths": [
+            "*.py"
+        ],
+        "exclude_search_paths": [
+            "/docs"
+        ],
+        "regexes": {
+            "random": ".*"
         }
-        ''')
+        }
+
+        '''.replace(" ", ""))
         
     def test_repr(self):
         #String should match the string literal specified below
         search_config = SearchConfig(max_depth=10)
-        self.assertTrue(repr(search_config),"SearchConfig(max_depth=10,"\
+        self.assertEqual(repr(search_config),"SearchConfig(max_depth=10,"\
             "entropy_checks_enabled=True,"\
                 "include_search_paths=None,"\
-                    "exclude_seach_paths=None,"\
+                    "exclude_search_paths=None,"\
                         "entropy_checks_enabled=True,regexes=None)")
 
 

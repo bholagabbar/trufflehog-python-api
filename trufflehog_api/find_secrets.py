@@ -115,8 +115,17 @@ class Secret:
     def __str__(self):
         """
         :return: Returns a string containing all the attributes of a Secret
+        besides the diff.
         """
-        return json.dumps(self.to_dict(), indent=2)
+        return "commit_time: {commit_time},\n" \
+        "branch_name: {branch_name},\n" \
+        "commit: {commit},\n"\
+        "commit_hash: {commit_hash},\n"\
+        "reason: {reason},\n" \
+        "path: {path}".format(commit_time=self._commit_time, 
+        branch_name=self._branch_name, commit=self._commit, 
+        commit_hash=self._commit_hash, diff=self._diff, 
+        reason=self._reason, path=self._path)
 
     def __repr__(self):
         """
@@ -126,8 +135,10 @@ class Secret:
             "branch_name={branch_name}, commit={commit}, "\
             "commit_hash={commit_hash}, diff={diff}, reason={reason}, " \
             "path={path})".format(
-            commit_time=self._commit_time, branch_name=self._branch_name, commit=self._commit, commit_hash=self._commit_hash, diff=self._diff, reason=self._reason, path=self._path
-        )
+            commit_time=self._commit_time, branch_name=self._branch_name, 
+            commit=self._commit, commit_hash=self._commit_hash, diff=self._diff, 
+            reason=self._reason, path=self._path
+            )
 
     def to_dict(self):
         """

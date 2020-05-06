@@ -107,6 +107,11 @@ class SearchConfig:
     @staticmethod
     def from_str(input_config: str):
         """
+        Takes a json string with the desire configuration and generates a SearchConfig object
+
+        :param str input_config: 
+            The json string containing the configuration
+
         :return: Returns a SearchConfig from the a json string 
         """ 
         config_dict = json.loads(input_config, strict=False)
@@ -168,7 +173,7 @@ class SearchConfig:
     def to_dict(self):
         """
         :return: Returns a dictionary containing all the attributes of the SearchConfig
-        """        
+        """
         config_dict = dict()
         config_dict["max_depth"] = self._max_depth
         config_dict["entropy_enabled"] = self._entropy_checks_enabled
@@ -178,8 +183,14 @@ class SearchConfig:
         return config_dict
 
     @staticmethod
-    def from_dict(input_config: str): 
+    def from_dict(input_config: dict): 
+        
         """
+        Takes in a dictionary with the search configurations correctly formatted
+        and generates a SearchConfig object
+
+        :param dict input_config
+            The search configurations in the form of a dictionary. 
         :return: Returns the object containing all the attributes specified in the dict
         """
 

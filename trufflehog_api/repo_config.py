@@ -64,8 +64,12 @@ class RepoConfig:
 
 
     def __str__(self):
+        """
+        :return: A string with the repoconfig's branch and since_commit
+        attributes
+        """        
         return "branch: {branch}, since_commit: {since_commit}".format(
-            branch=self._branch, since_commit=self._since_commit) 
+            branch=self._branch, since_commit=self._since_commit)
 
     def __repr__(self):
         """
