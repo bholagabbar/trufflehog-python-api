@@ -17,11 +17,11 @@ class TestRepoConfig(unittest.TestCase):
         self.assertEqual(r.branch, test_branch, "since branch should match")
         self.assertEqual(r.since_commit, test_commit, "since commit should match")
 
-    # TODO: Fix when we get representation
-    # def test_repository_str(self):
-    #    test_path = 'test_path'
-    #    r = RepoConfig(path=test_path)
-    #    self.assertEqual(r.__str__(), r.path)
+    def test_repository_str(self):
+        test_branch = 'master'
+        test_commit = 'x123'
+        r = RepoConfig(branch=test_branch, since_commit=test_commit)
+        self.assertEqual(r.__str__(), "branch: master, since_commit: x123")
 
     def test_repository_repr(self):
         r = RepoConfig()
