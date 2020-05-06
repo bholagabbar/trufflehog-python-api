@@ -6,7 +6,6 @@ from .context import (SearchConfig, find_secrets)
 class TestFindSecrets(unittest.TestCase):
 
     def test_find_secrets(self):
-        # output = truffleHog.find_strings(None, repo_path=".", do_entropy=False, do_regex=True)
         secrets = find_secrets(".")
         self.assertIsNot(secrets, [])
 
