@@ -24,7 +24,7 @@ class Secret:
     def __init__(self, *,
                  commit_time: datetime.datetime,
                  branch_name: str,
-                 prev_commit: str,
+                 commit: str,
                  diff: str,
                  commit_hash: str,
                  reason: str,
@@ -32,7 +32,7 @@ class Secret:
         """TODO"""
         self._commit_time: datetime.datetime = commit_time
         self._branch_name: str = branch_name
-        self._prev_commit: str = prev_commit
+        self._commit: str = commit
         self._diff: str = diff
         self._commit_hash: str = commit_hash
         self._reason: str = reason
@@ -50,9 +50,9 @@ class Secret:
 
     # TODO: Figure out how this is handled with no previous (Might be only commit).
     @property
-    def prev_commit(self) -> str:
+    def commit(self) -> str:
         """TODO"""
-        return self._prev_commit
+        return self._commit
 
     @property
     def diff(self) -> str:
@@ -78,16 +78,17 @@ class Secret:
         """
         :return: Returns a string containing all the attributes of a Secret
         """
-        return "commit_time: {commit_time},\nbranch_name: {branch_name},\nprev_commit: {prev_commit},\ncommit_hash: {commit_hash},\nreason: {reason},\npath: {path}".format(
-            commit_time=self._commit_time, branch_name=self._branch_name, prev_commit=self._prev_commit, commit_hash=self._commit_hash, reason=self._reason, path=self._path
-        )
+        return json.dumps(self.to_dict(), indent=2)
 
     def __repr__(self):
         """
         :return: Returns a string containing all the attributes of a Secret
         """
-        return "Secret(commit_time={commit_time}, branch_name={branch_name}, prev_commit={prev_commit}, commit_hash={commit_hash}, diff={diff}, reason={reason}, path={path})".format(
-            commit_time=self._commit_time, branch_name=self._branch_name, prev_commit=self._prev_commit, commit_hash=self._commit_hash, diff=self._diff, reason=self._reason, path=self._path
+        return "Secret(commit_time={commit_time}, "\
+            "branch_name={branch_name}, commit={commit}, "\
+            "commit_hash={commit_hash}, diff={diff}, reason={reason}, " \
+            "path={path})".format(
+            commit_time=self._commit_time, branch_name=self._branch_name, commit=self._commit, commit_hash=self._commit_hash, diff=self._diff, reason=self._reason, path=self._path
         )
 
     def to_dict(self):
@@ -97,7 +98,7 @@ class Secret:
         secret_dict = dict()
         secret_dict["commit_time"] = self._commit_time
         secret_dict["branch_name"] = self._branch_name
-        secret_dict["prev_commit"] = self._prev_commit
+        secret_dict["commit"] = self._commit
         secret_dict["diff"] = self._diff
         secret_dict["commit_hash"] = self._commit_hash
         secret_dict["reason"] = self._reason
@@ -113,7 +114,7 @@ def _convert_default_output_to_secrets(output: dict) -> List[Secret]:
             issue = json.loads(result_file.read())
             secret = Secret(commit_time=issue['date'],
                             branch_name=issue['branch'],
-                            prev_commit=issue['commit'],
+                            commit=issue['commit'],
                             diff=issue['printDiff'],
                             commit_hash=issue['commitHash'],
                             reason=issue['reason'],

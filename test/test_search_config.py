@@ -42,21 +42,49 @@ class TestSearchConfig(unittest.TestCase):
         self.assertTrue(SearchConfig.default_regexes() is not default_regexes)
 
     def test_str(self):
-        # TODO
-        print("testing str")
-        search_config = SearchConfig(max_depth=10)
-        print(search_config)
-
+        #String should match the string literal specified below
+        include_search_paths = ['*.py']
+        exclude_search_paths = ['/docs']
+        regexes = {"random": ".*"}
+        search_config = SearchConfig(max_depth=10,entropy_checks_enabled=False,
+        include_search_paths=include_search_paths, exclude_search_paths=exclude_search_paths, 
+        regexes=regexes)
+        self.assertTrue(str(search_config),
+        '''
+        {
+        max_depth: 10,
+        entropy_checks_enabled: False,
+        include_search_paths: ['*.py'],
+        exclude_search_paths: ['/docs'],
+        regexes: {'random': '.*'}
+        }
+        ''')
+        
     def test_repr(self):
-        print("testing repr")
+        #String should match the string literal specified below
         search_config = SearchConfig(max_depth=10)
-        print(repr(search_config))
+        self.assertTrue(repr(search_config),"SearchConfig(max_depth=10,"\
+            "entropy_checks_enabled=True,"\
+                "include_search_paths=None,"\
+                    "exclude_seach_paths=None,"\
+                        "entropy_checks_enabled=True,regexes=None)")
+
 
     def test_from_str(self):
-        print("testing from str")
-        string = '{"max_depth": "1000", "entropy_checks_enabled": "True"}'
+        #String generated using from_str
+        include_search_paths = ["*.py"]
+        exclude_search_paths = ["/docs"]
+        regexes = {"random": ".*"}
+        search_config = SearchConfig(max_depth=10, entropy_checks_enabled=False,
+        include_search_paths=include_search_paths, exclude_search_paths=exclude_search_paths, 
+        regexes=regexes)
+        string = str(search_config)
         config = SearchConfig.from_str(string)
-        print(config)
+        self.assertTrue(config.max_depth == 10)
+        self.assertTrue(config.entropy_checks_enabled == False) 
+        self.assertTrue(config.include_search_paths==include_search_paths)
+        self.assertTrue(config.exclude_search_paths==exclude_search_paths)
+        self.assertTrue(config.regexes==regexes)
         
 
 if __name__ == '__main__':
