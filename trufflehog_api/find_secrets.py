@@ -65,14 +65,14 @@ class Secret:
     @property
     def commit_time(self) -> datetime.datetime:
         """
-        :return time when the secret was committed
+        :return: time when the secret was committed
         """
         return self._commit_time
 
     @property
     def branch_name(self) -> str:
         """
-        :return branch where the secret was committed
+        :return: branch where the secret was committed
         """
         return self._branch_name
 
