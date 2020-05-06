@@ -1,6 +1,6 @@
 import unittest
 
-from test.context import RepoConfig
+from .context import RepoConfig
 
 
 class TestRepoConfig(unittest.TestCase):

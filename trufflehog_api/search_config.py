@@ -1,3 +1,4 @@
+import json
 from copy import copy
 from typing import List, Dict
 
@@ -99,14 +100,60 @@ class SearchConfig:
         """
         return copy(default_regexes)
 
+    @staticmethod 
+    def from_str(input_config: str):
+        """
+        :return: Returns a SearchConfig from the a dictionary string 
+        """ 
+        config_dict = json.loads(input_config)
+        max_depth = 1000000
+        include_search_paths = None
+        exclude_search_paths = None
+        entropy_checks_enabled = True
+        regexes = None
+                
+        if "max_depth" in config_dict:
+            max_depth = int(config_dict["max_depth"])
+        if "include_search_paths" in config_dict:
+            include_search_paths = config_dict.get("include_search_paths")
+        if "exclude_search_paths" in config_dict:
+            exclude_search_paths = config_dict.get("exclude_search_paths")
+        if "entropy_checks_enabled" in config_dict:
+            entropy_checks_enabled = config_dict.get("entropy_checks_enabled")
+            if entropy_checks_enabled.lower() == "true":
+                entropy_checks_enabled = True
+            else:
+                entropy_checks_enabled = False
+        if "regexes" in config_dict:
+            regexes = json.loads(config_dict.get("regexes"))
+
+        config = SearchConfig(
+                 max_depth=max_depth,
+                 include_search_paths=include_search_paths,
+                 exclude_search_paths=exclude_search_paths,
+                 entropy_checks_enabled=entropy_checks_enabled,
+                 regexes=regexes,
+                 )
+
+        return config
+
     def __str__(self):
         """
-        TODO
+        :return: Returns a dictionary string containing all the attributes of the SearchConfig
         """
-        raise NotImplementedError()
+        string =  "max_depth: {max_depth}, \nentropy_checks_enabled: {entropy_enabled}, \ninclude_search_paths: {incl_search_paths}, \nexclude_search_paths: {excl_search_paths}, \nregexes: {regexes}".format(max_depth=str(self._max_depth), 
+            entropy_enabled=str(self._entropy_checks_enabled),
+            incl_search_paths=str(self._include_search_paths),
+            excl_search_paths=str(self._exclude_search_paths),
+            regexes=str(self._regexes));
+        return "{\n" + string + "\n}"
 
     def __repr__(self):
         """
-        TODO
+        :return: Returns a string containing all the attributes of the SearchConfig
         """
-        raise NotImplementedError()
+        return ("SearchConfig(max_depth={entropy_enabled}, include_search_parts={incl_search_paths}, exclude_seach_parts={excl_search_paths}, entropy_checks_enabled={entropy_enabled}, regexes={regexes}").format(max_depth=str(self._max_depth), 
+            entropy_enabled=str(self._entropy_checks_enabled),
+            incl_search_paths=str(self._include_search_paths),
+            excl_search_paths=str(self._exclude_search_paths),
+            regexes=str(self._regexes));

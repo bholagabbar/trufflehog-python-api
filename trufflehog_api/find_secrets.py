@@ -75,16 +75,34 @@ class Secret:
         return self._path
 
     def __str__(self):
-        """TODO"""
-        raise NotImplementedError()
+        """
+        :return: Returns a string containing all the attributes of a Secret
+        """
+        return "commit_time: {commit_time},\nbranch_name: {branch_name},\nprev_commit: {prev_commit},\ncommit_hash: {commit_hash},\nreason: {reason},\npath: {path}".format(
+            commit_time=self._commit_time, branch_name=self._branch_name, prev_commit=self._prev_commit, commit_hash=self._commit_hash, reason=self._reason, path=self._path
+        )
 
     def __repr__(self):
-        """TODO"""
-        raise NotImplementedError()
+        """
+        :return: Returns a string containing all the attributes of a Secret
+        """
+        return "Secret(commit_time={commit_time}, branch_name={branch_name}, prev_commit={prev_commit}, commit_hash={commit_hash}, diff={diff}, reason={reason}, path={path})".format(
+            commit_time=self._commit_time, branch_name=self._branch_name, prev_commit=self._prev_commit, commit_hash=self._commit_hash, diff=self._diff, reason=self._reason, path=self._path
+        )
 
     def to_dict(self):
-        """TODO"""
-        raise NotImplementedError()
+        """
+        :return: Returns a dict containing all the attributes of a Secret
+        """
+        secret_dict = dict()
+        secret_dict["commit_time"] = self._commit_time
+        secret_dict["branch_name"] = self._branch_name
+        secret_dict["prev_commit"] = self._prev_commit
+        secret_dict["diff"] = self._diff
+        secret_dict["commit_hash"] = self._commit_hash
+        secret_dict["reason"] = self._reason
+        secret_dict["path"] = self._path
+        return secret_dict
 
 
 def _convert_default_output_to_secrets(output: dict) -> List[Secret]:

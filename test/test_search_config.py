@@ -43,12 +43,21 @@ class TestSearchConfig(unittest.TestCase):
 
     def test_str(self):
         # TODO
-        return
+        print("testing str")
+        search_config = SearchConfig(max_depth=10)
+        print(search_config)
 
     def test_repr(self):
-        # TODO
-        return
+        print("testing repr")
+        search_config = SearchConfig(max_depth=10)
+        print(repr(search_config))
 
+    def test_from_str(self):
+        print("testing from str")
+        string = '{"max_depth": "1000", "entropy_checks_enabled": "True"}'
+        config = SearchConfig.from_str(string)
+        print(config)
+        
 
 if __name__ == '__main__':
     unittest.main()
