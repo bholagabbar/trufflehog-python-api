@@ -18,7 +18,7 @@ class TestRepoConfig(unittest.TestCase):
         self.assertEqual(r.since_commit, test_commit, "since commit should match")
 
     # TODO: Fix when we get representation
-    #def test_repository_str(self):
+    # def test_repository_str(self):
     #    test_path = 'test_path'
     #    r = RepoConfig(path=test_path)
     #    self.assertEqual(r.__str__(), r.path)
