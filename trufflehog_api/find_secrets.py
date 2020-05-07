@@ -163,6 +163,127 @@ class Secret:
                                       path=self._path))
 
 
+class FindSecretsRequest:
+    """
+    Represents a request to search for secrets in a specific repository
+    with RepoConfig and SearchConfig
+    """
+
+    def __init__(self, *,
+                 path: str,
+                 repo_config: RepoConfig = None,
+                 search_config: SearchConfig = None):
+        """Creates a new FindSecretsRequest object
+
+        :param str path:
+        Path to the git repository
+
+        :param repo_config:
+        Configuration object to specify repository specific attributes for the search
+
+        :param search_config:
+        Configuration object to specify other attributes for the search that can be
+        generalized to many searches
+        """
+        self._path = path
+        self._repo_config = repo_config
+        self._search_config = search_config
+
+    @property
+    def path(self) -> str:
+        """
+        :return: request's path to git repository
+        """
+        return self._path
+
+    @property
+    def repo_config(self) -> RepoConfig:
+        """
+        :return: request's repository specific attributes for the search
+        """
+        return self._repo_config
+
+    @property
+    def search_config(self) -> SearchConfig:
+        """
+        :return: request's other attributes for the search
+        """
+        return self._search_config
+
+
+def build_find_secrets_request(path: str, repo_config: RepoConfig,
+                               search_config: SearchConfig) -> FindSecretsRequest:
+    """Creates a new FindSecretsRequest object given path to git repository, RepoConfig,
+    and SearchConfig
+
+    :param str path:
+    Path to the git repository
+
+    :param repo_config:
+    Configuration object to specify repository specific attributes for the search
+
+    :param search_config:
+    Configuration object to specify other attributes for the search that can be
+    generalized to many searches
+
+    :return: FindSecretsRequest with the given parameters
+    """
+    return FindSecretsRequest(path=path, repo_config=repo_config, search_config=search_config)
+
+def execute_find_secrets_request(request: FindSecretsRequest) -> List[Secret]:
+    """
+    Executes the search for secrets with the given request
+
+    :param FindSecretsRequest request:
+        request object containing the path to the git repository and
+        other configurations for the search
+
+    :return: list of secret objects that represent the secrets found by the search
+    """
+    path = request.path
+    repo_config = request.repo_config
+    search_config = request.search_config
+
+    if not repo_config:
+        repo_config = RepoConfig()
+
+    if not search_config:
+        search_config = SearchConfig()
+
+    token_key = repo_config.access_token_env_key
+
+    if is_git_dir(path + os.path.sep + ".git"):
+        # Is repo is local repository and env access token is present, display warning.
+        if token_key and token_key in os.environ:
+            warnings.warn("Warning: local repository path provided with an access token - "
+                          "Token will be ignored")
+        git_url = None
+        repo_path = path
+    else:
+        # Is repo is remote, append env access if present to the path
+        git_url = path
+        if token_key and token_key in os.environ:
+            git_url = _append_env_access_token_to_path(path, token_key)
+        repo_path = None
+
+    do_regex = search_config.regexes
+
+    output = truffleHog.find_strings(git_url=git_url,
+                                     since_commit=repo_config.since_commit,
+                                     max_depth=search_config.max_depth,
+                                     do_regex=do_regex,
+                                     do_entropy=search_config.entropy_checks_enabled,
+                                     custom_regexes=search_config.regexes,
+                                     branch=repo_config.branch,
+                                     repo_path=repo_path,
+                                     path_inclusions=search_config.include_search_paths,
+                                     path_exclusions=search_config.exclude_search_paths)
+    secrets = _convert_default_output_to_secrets(output)
+    _clean_up(output)
+    return secrets
+
+
+
 def _convert_default_output_to_secrets(output: dict) -> List[Secret]:
     """
     Takes the output from truffleHog.find_strings() and converts
@@ -236,41 +357,5 @@ def find_secrets(path: str,
 
     :return: list of secret objects that represent the secrets found by the search
     """
-
-    if not repo_config:
-        repo_config = RepoConfig()
-
-    if not search_config:
-        search_config = SearchConfig()
-
-    token_key = repo_config.access_token_env_key
-
-    if is_git_dir(path + os.path.sep + ".git"):
-        # Is repo is local repository and env access token is present, display warning.
-        if token_key and token_key in os.environ:
-            warnings.warn("Warning: local repository path provided with an access token - "
-                          "Token will be ignored")
-        git_url = None
-        repo_path = path
-    else:
-        # Is repo is remote, append env access if present to the path
-        git_url = path
-        if token_key and token_key in os.environ:
-            git_url = _append_env_access_token_to_path(path, token_key)
-        repo_path = None
-
-    do_regex = search_config.regexes
-
-    output = truffleHog.find_strings(git_url=git_url,
-                                     since_commit=repo_config.since_commit,
-                                     max_depth=search_config.max_depth,
-                                     do_regex=do_regex,
-                                     do_entropy=search_config.entropy_checks_enabled,
-                                     custom_regexes=search_config.regexes,
-                                     branch=repo_config.branch,
-                                     repo_path=repo_path,
-                                     path_inclusions=search_config.include_search_paths,
-                                     path_exclusions=search_config.exclude_search_paths)
-    secrets = _convert_default_output_to_secrets(output)
-    _clean_up(output)
-    return secrets
+    return execute_find_secrets_request(
+        build_find_secrets_request(path, repo_config, search_config))
