@@ -1,11 +1,13 @@
-import six
+"""
+Contains the TrufflehogApiError which is the exception thrown at the API layer
+"""
 
 
 class TrufflehogApiError(Exception):
     """Wraps API specific errors and lower level exceptions thrown by library dependencies """
 
     def __init__(self, reason, response=None, api_code=None):
-        self.reason = six.text_type(reason)
+        self.reason = reason
         self.response = response
         self.api_code = api_code
         super(TrufflehogApiError, self).__init__(reason)
