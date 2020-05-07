@@ -17,17 +17,13 @@ Runs all tests - `python3 -m unittest discover -v`
 
 Docs are visible in the `/docs/` folder.
 
-## Requirements
-https://github.com/cakeid/17480-Final-Project/wiki/Requirements-Document
-
 ## Usage examples
 Sample client code being applied to usecases can be found in the `/examples` folder
 
-## API Drafts
-TODO - Add sketch here as V1 itself
+## [Requirements](https://github.com/cakeid/17480-Final-Project/wiki/Requirements-Document)
 
-## Issues list
-https://github.com/cakeid/17480-Final-Project/issues
+## [API Iteration Versions](https://github.com/cakeid/17480-Final-Project/wiki/API-Versions)
 
-## Rationale
-https://github.com/cakeid/17480-Final-Project/wiki/Design-Rationale
+## [Issues list](https://github.com/cakeid/17480-Final-Project/issues)
+
+## [Rationale](https://github.com/cakeid/17480-Final-Project/wiki/Design-Rationale)
