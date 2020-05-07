@@ -1,7 +1,8 @@
 import os
+import datetime
 import unittest
 
-from .context import (SearchConfig, find_secrets, RepoConfig)
+from .context import (SearchConfig, find_secrets, RepoConfig, Secret)
 
 # Set this locally or in the CI config, value should be Github API Token
 TOKEN_ENV_KEY = "TEST_GITHUB_TOKEN"
@@ -24,6 +25,40 @@ class TestFindSecrets(unittest.TestCase):
 
         self.assertTrue(found_pgp_secret)
         self.assertEqual(path_to_secret, "test/resources/test_file.txt")
+
+    def test_print_secret(self):
+        secret = Secret(commit_time=datetime.datetime(2020, 9, 16), \
+        branch_name="branch", commit="commit", diff="diff", \
+        commit_hash="commit_hash", reason="reason", path="path")
+
+        #Testing str
+        self.assertEqual(str(secret).replace(" ", ""), \
+        """commit_time: 2020-09-16 00:00:00,
+        branch_name: branch,
+        commit: commit,
+        commit_hash: commit_hash,
+        reason: reason,
+        path: path """.replace(" ", ""))
+
+        #Testing repr
+        self.assertEqual(repr(secret).replace(" ", ""), \
+        "Secret(commit_time=2020-09-16 00:00:00, " \
+        "branch_name=branch, commit=commit, commit_hash=commit_hash, " \
+        "diff=diff, reason=reason, path=path)" \
+        .replace(" ", ""))
+
+    def test_dict(self):
+        secret = Secret(commit_time=datetime.datetime(2020, 9, 16), \
+        branch_name="branch", commit="commit", diff="diff", \
+        commit_hash="commit_hash", reason="reason", path="path")
+        secret_dict = secret.to_dict()
+        self.assertEqual(secret_dict["commit_time"], secret.commit_time)
+        self.assertEqual(secret_dict["branch_name"], secret.branch_name)
+        self.assertEqual(secret_dict["commit"], secret.commit)
+        self.assertEqual(secret_dict["diff"], secret.diff)
+        self.assertEqual(secret_dict["commit_hash"], secret.commit_hash)
+        self.assertEqual(secret_dict["reason"], secret.reason)
+        self.assertEqual(secret_dict["path"], secret.path)
 
     def test_find_secrets_remote(self):
         # If value for TOKEN_ENV_KEY has been set in CI, runs the complete remote find_secrets flow

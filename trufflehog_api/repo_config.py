@@ -95,7 +95,12 @@ class RepoConfig:
         return self._access_token_env_key
 
     def __str__(self):
-        raise NotImplementedError()
+        """
+        :return: A string with the repoconfig's branch and since_commit
+        attributes
+        """        
+        return "branch: {branch}, since_commit: {since_commit}".format(
+            branch=self._branch, since_commit=self._since_commit)
 
     def __repr__(self):
         """
