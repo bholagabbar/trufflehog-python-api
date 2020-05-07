@@ -113,33 +113,6 @@ class Secret:
         """
         return self._path
 
-    def __str__(self):
-        """
-        :return: Returns a string containing all the attributes of a Secret
-        besides the diff.
-        """
-        return "commit_time: {commit_time},\n" \
-        "branch_name: {branch_name},\n" \
-        "commit: {commit},\n"\
-        "commit_hash: {commit_hash},\n"\
-        "reason: {reason},\n" \
-        "path: {path}".format(commit_time=self._commit_time, \
-        branch_name=self._branch_name, commit=self._commit, \
-        commit_hash=self._commit_hash, \
-        reason=self._reason, path=self._path)
-
-    def __repr__(self):
-        """
-        :return: Returns a string containing all the attributes of a Secret
-        """
-        return "Secret(commit_time={commit_time}, "\
-            "branch_name={branch_name}, commit={commit}, "\
-            "commit_hash={commit_hash}, diff={diff}, reason={reason}, " \
-            "path={path})".format( \
-            commit_time=self._commit_time, branch_name=self._branch_name, \
-            commit=self._commit, commit_hash=self._commit_hash, diff=self._diff, \
-            reason=self._reason, path=self._path)
-
     def to_dict(self):
         """
         :return: Returns a dict containing all the attributes of a Secret
@@ -154,11 +127,46 @@ class Secret:
         secret_dict["path"] = self._path
         return secret_dict
 
+    def __str__(self):
+        """
+        :return: Returns a string containing all the attributes of a Secret
+        besides the diff.
+        """
+        return ("commit_time: {commit_time},\n"
+                "branch_name: {branch_name},\n"
+                "commit: {commit},\n"
+                "commit_hash: {commit_hash},\n"
+                "reason: {reason},\n"
+                "path: {path}".format(commit_time=self._commit_time,
+                                      branch_name=self._branch_name,
+                                      commit=self._commit,
+                                      commit_hash=self._commit_hash,
+                                      reason=self._reason,
+                                      path=self._path))
+
+    def __repr__(self):
+        """
+        :return: Returns a string containing all the attributes of a Secret
+        """
+        return ("Secret(commit_time={commit_time}, "
+                "branch_name={branch_name}, "
+                "commit={commit}, "
+                "commit_hash={commit_hash}, "
+                "diff={diff}, "
+                "reason={reason}, "
+                "path={path})".format(commit_time=self._commit_time,
+                                      branch_name=self._branch_name,
+                                      commit=self._commit,
+                                      commit_hash=self._commit_hash,
+                                      diff=self._diff,
+                                      reason=self._reason,
+                                      path=self._path))
+
 
 def _convert_default_output_to_secrets(output: dict) -> List[Secret]:
     """
     Takes the output from truffleHog.find_strings() and converts
-    to a list of Secret objects that are easier to programatically
+    to a list of Secret objects that are easier to programmatically
     parse and output.
 
     :param dict output:
@@ -183,8 +191,7 @@ def _convert_default_output_to_secrets(output: dict) -> List[Secret]:
 
 
 def _clean_up(output: dict):
-    """
-    Removes files containing the output from truffleHog.find_strings()
+    """Removes files containing the output from truffleHog.find_strings()
     from the file system.
 
     :param dict output:
@@ -196,6 +203,14 @@ def _clean_up(output: dict):
 
 
 def _append_env_access_token_to_path(path, token_key):
+    """Appends the secret token to a valid git url
+
+    :param str path:
+        Repository path
+    :param str token_key:
+        Env variable key which stores the secret token
+    """
+    # FIXME - This only supports github!
     idx = path.find("github.com/")
     if idx > -1:
         path = path[:idx] + os.environ.get(token_key) + ":x-oauth-basic@" + path[idx:]

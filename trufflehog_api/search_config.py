@@ -132,13 +132,13 @@ class SearchConfig:
         if "regexes" in config_dict:
             regexes = config_dict.get("regexes")
 
-        config = SearchConfig( \
-                 max_depth=max_depth, \
-                 include_search_paths=include_search_paths, \
-                 exclude_search_paths=exclude_search_paths, \
-                 entropy_checks_enabled=entropy_checks_enabled, \
-                 regexes=regexes,
-                 )
+        config = SearchConfig(
+            max_depth=max_depth,
+            include_search_paths=include_search_paths,
+            exclude_search_paths=exclude_search_paths,
+            entropy_checks_enabled=entropy_checks_enabled,
+            regexes=regexes,
+        )
 
         return config
 
@@ -159,16 +159,16 @@ class SearchConfig:
         """
         :return: Returns a string containing all the attributes of the SearchConfig
         """
-        return ("SearchConfig(max_depth={max_depth},"\
-            "entropy_checks_enabled={entropy_enabled},"\
-            "include_search_paths={incl_search_paths},"\
-            "exclude_search_paths={excl_search_paths},"\
-            "entropy_checks_enabled={entropy_enabled},"\
-            "regexes={regexes})").format(max_depth=str(self._max_depth), \
-            entropy_enabled=str(self._entropy_checks_enabled), \
-            incl_search_paths=str(self._include_search_paths), \
-            excl_search_paths=str(self._exclude_search_paths), \
-            regexes=str(self._regexes))
+        return ("SearchConfig(max_depth={max_depth},"
+                "entropy_checks_enabled={entropy_enabled},"
+                "include_search_paths={incl_search_paths},"
+                "exclude_search_paths={excl_search_paths},"
+                "entropy_checks_enabled={entropy_enabled},"
+                "regexes={regexes})").format(max_depth=str(self._max_depth),
+                                             entropy_enabled=str(self._entropy_checks_enabled),
+                                             incl_search_paths=str(self._include_search_paths),
+                                             excl_search_paths=str(self._exclude_search_paths),
+                                             regexes=str(self._regexes))
 
     def to_dict(self):
         """
@@ -188,7 +188,7 @@ class SearchConfig:
         Takes in a dictionary with the search configurations correctly formatted
         and generates a SearchConfig object
 
-        :param dict input_config
+        :param dict input_config:
             The search configurations in the form of a dictionary.
         :return: Returns the object containing all the attributes specified in the dict
         """
@@ -211,12 +211,12 @@ class SearchConfig:
         if "regexes" in config_dict:
             regexes = config_dict.get("regexes")
 
-        config = SearchConfig( \
-                 max_depth=max_depth, \
-                 include_search_paths=include_search_paths, \
-                 exclude_search_paths=exclude_search_paths, \
-                 entropy_checks_enabled=entropy_checks_enabled, \
-                 regexes=regexes,
-                 )
+        config = SearchConfig(
+            max_depth=max_depth,
+            include_search_paths=include_search_paths,
+            exclude_search_paths=exclude_search_paths,
+            entropy_checks_enabled=entropy_checks_enabled,
+            regexes=regexes,
+        )
 
         return config

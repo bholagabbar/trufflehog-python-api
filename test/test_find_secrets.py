@@ -1,5 +1,5 @@
-import os
 import datetime
+import os
 import unittest
 
 from .context import (SearchConfig, find_secrets, RepoConfig, Secret)
@@ -27,30 +27,30 @@ class TestFindSecrets(unittest.TestCase):
         self.assertEqual(path_to_secret, "test/resources/test_file.txt")
 
     def test_print_secret(self):
-        secret = Secret(commit_time=datetime.datetime(2020, 9, 16), \
-        branch_name="branch", commit="commit", diff="diff", \
-        commit_hash="commit_hash", reason="reason", path="path")
+        secret = Secret(commit_time=datetime.datetime(2020, 9, 16),
+                        branch_name="branch", commit="commit", diff="diff",
+                        commit_hash="commit_hash", reason="reason", path="path")
 
-        #Testing str
-        self.assertEqual(str(secret).replace(" ", ""), \
-        """commit_time: 2020-09-16 00:00:00,
-        branch_name: branch,
-        commit: commit,
-        commit_hash: commit_hash,
-        reason: reason,
-        path: path """.replace(" ", ""))
+        # Testing str
+        self.assertEqual(str(secret).replace(" ", ""),
+                         """commit_time: 2020-09-16 00:00:00,
+                         branch_name: branch,
+                         commit: commit,
+                         commit_hash: commit_hash,
+                         reason: reason,
+                         path: path """.replace(" ", ""))
 
-        #Testing repr
-        self.assertEqual(repr(secret).replace(" ", ""), \
-        "Secret(commit_time=2020-09-16 00:00:00, " \
-        "branch_name=branch, commit=commit, commit_hash=commit_hash, " \
-        "diff=diff, reason=reason, path=path)" \
-        .replace(" ", ""))
+        # Testing repr
+        self.assertEqual(repr(secret).replace(" ", ""),
+                         "Secret(commit_time=2020-09-16 00:00:00, "
+                         "branch_name=branch, commit=commit, commit_hash=commit_hash, "
+                         "diff=diff, reason=reason, path=path)"
+                         .replace(" ", ""))
 
-    def test_dict(self):
-        secret = Secret(commit_time=datetime.datetime(2020, 9, 16), \
-        branch_name="branch", commit="commit", diff="diff", \
-        commit_hash="commit_hash", reason="reason", path="path")
+    def test_to_dict(self):
+        secret = Secret(commit_time=datetime.datetime(2020, 9, 16),
+                        branch_name="branch", commit="commit", diff="diff",
+                        commit_hash="commit_hash", reason="reason", path="path")
         secret_dict = secret.to_dict()
         self.assertEqual(secret_dict["commit_time"], secret.commit_time)
         self.assertEqual(secret_dict["branch_name"], secret.branch_name)

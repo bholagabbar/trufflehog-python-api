@@ -65,7 +65,7 @@ class RepoConfig:
         if since_commit_override:
             since_commit_to_set = since_commit_override
 
-        access_token_env_key_to_set = repo_config._access_token_env_key
+        access_token_env_key_to_set = repo_config.access_token_env_key
         if access_token_env_key_override:
             access_token_env_key_to_set = access_token_env_key_override
 
@@ -96,9 +96,8 @@ class RepoConfig:
 
     def __str__(self):
         """
-        :return: A string with the repoconfig's branch and since_commit
-        attributes
-        """        
+        :return: A string with the RepoConfig object's attributes
+        """
         return "branch: {branch}, since_commit: {since_commit}".format(
             branch=self._branch, since_commit=self._since_commit)
 
