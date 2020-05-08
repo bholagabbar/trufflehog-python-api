@@ -1,5 +1,6 @@
 import concurrent.futures
 import datetime
+import os
 import unittest
 
 from .context import (SearchConfig, find_secrets, RepoConfig,
@@ -61,6 +62,35 @@ class TestFindSecrets(unittest.TestCase):
         self.assertEqual(secret_dict["commit_hash"], secret.commit_hash)
         self.assertEqual(secret_dict["reason"], secret.reason)
         self.assertEqual(secret_dict["path"], secret.path)
+
+    def test_find_secrets_remote(self):
+        # If value for TOKEN_ENV_KEY has been set in CI, runs the complete remote find_secrets flow
+        if TOKEN_ENV_KEY in os.environ:
+            print('TOKEN_ENV_KEY is set, attempting to run find_secrets for remote private repo!')
+
+            r_config = RepoConfig(access_token_env_key=TOKEN_ENV_KEY)
+            s_config = SearchConfig(entropy_checks_enabled=False,
+                                    regexes=SearchConfig.default_regexes())
+
+            # Private remote git repository created specifically for testing
+            secrets = find_secrets("https://github.com/4751395/test.git", repo_config=r_config,
+                                   search_config=s_config)
+
+            self.assertIsNot(secrets, [])
+            self.assertEqual(len(secrets), 2)
+
+            num_generic_secrets = 0
+            secret_hashes = []
+            for secret in secrets:
+                if secret.reason == "Generic Secret":
+                    num_generic_secrets += 1
+                secret_hashes.append(secret.commit_hash)
+
+            self.assertEqual(num_generic_secrets, 2)
+            self.assertTrue("756568e922f868d798949f1d25c5b08292dcc49b" in secret_hashes)
+            self.assertTrue("ed8aab163431cbea0886db4961f5f9bde172cdd4" in secret_hashes)
+        else:
+            print('TOKEN_ENV_KEY not set, skipped execution!')
 
     def test_find_secrets_request_creation(self):
         path = "https://github.com/user/test_repo.git"
