@@ -68,11 +68,11 @@ class TestSearchConfig(unittest.TestCase):
     def test_repr(self):
         # String should match the string literal specified below
         search_config = SearchConfig(max_depth=10)
-        self.assertEqual(repr(search_config), "SearchConfig(max_depth=10,"
-                                              "entropy_checks_enabled=True,"
-                                              "include_search_paths=None,"
-                                              "exclude_search_paths=None,"
-                                              "entropy_checks_enabled=True,"
+        self.assertEqual(repr(search_config), "SearchConfig(max_depth=10, "
+                                              "entropy_checks_enabled=True, "
+                                              "include_search_paths=None, "
+                                              "exclude_search_paths=None, "
+                                              "entropy_checks_enabled=True, "
                                               "regexes=None)")
 
     def test_from_str(self):

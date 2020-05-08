@@ -2,7 +2,7 @@ import datetime
 import os
 import unittest
 
-from .context import (SearchConfig, find_secrets, RepoConfig, Secret)
+from .context import (SearchConfig, find_secrets, RepoConfig, Secret, FindSecretsRequest)
 
 # Set this locally or in the CI config, value should be Github API Token
 TOKEN_ENV_KEY = "TEST_GITHUB_TOKEN"
@@ -88,6 +88,51 @@ class TestFindSecrets(unittest.TestCase):
             self.assertTrue("ed8aab163431cbea0886db4961f5f9bde172cdd4" in secret_hashes)
         else:
             print('TOKEN_ENV_KEY not set, skipped execution!')
+
+    def test_find_secrets_request_creation(self):
+        path = "https://github.com/user/test_repo.git"
+        branch = "test"
+        regexes = SearchConfig.default_regexes()
+        include_search_paths = ['*.py']
+
+        repo_config = RepoConfig(branch=branch)
+        search_config = SearchConfig(include_search_paths=include_search_paths,
+                                     regexes=regexes)
+
+        request = FindSecretsRequest(path,
+                                     repo_config=repo_config,
+                                     search_config=search_config)
+
+        self.assertEqual(request.path, path)
+        self.assertEqual(request.repo_config, repo_config)
+        self.assertEqual(request.search_config, search_config)
+
+
+    def test_find_secrets_request_defaults(self):
+        path = "https://github.com/user/test_repo.git"
+
+        request = FindSecretsRequest(path)
+
+        self.assertEqual(request.path, path)
+        self.assertEqual(request.repo_config, None)
+        self.assertEqual(request.search_config, None)
+
+
+    def test_find_secrets_request_repr(self):
+        path = "https://github.com/user/test_repo.git"
+        branch = "test"
+        repo_config = RepoConfig(branch=branch)
+
+        request = FindSecretsRequest(path,
+                                     repo_config=repo_config)
+
+        self.assertEqual(repr(request), "FindSecretsRequest(path="
+                                        "https://github.com/user/test_repo.git, "
+                                        "repo_config=RepoConfig(branch=test, "
+                                        "since_commit=None, "
+                                        "access_token_env_key=None), "
+                                        "search_config=None)")
+
 
 
 if __name__ == '__main__':

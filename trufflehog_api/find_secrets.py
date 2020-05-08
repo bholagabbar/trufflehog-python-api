@@ -169,8 +169,8 @@ class FindSecretsRequest:
     with RepoConfig and SearchConfig
     """
 
-    def __init__(self, *,
-                 path: str,
+    def __init__(self,
+                 path: str, *,
                  repo_config: RepoConfig = None,
                  search_config: SearchConfig = None):
         """Creates a new FindSecretsRequest object
@@ -180,10 +180,12 @@ class FindSecretsRequest:
 
         :param repo_config:
         Configuration object to specify repository specific attributes for the search
+        Default is None which gives the default RepoConfig object
 
         :param search_config:
         Configuration object to specify other attributes for the search that can be
         generalized to many searches
+        Default is None which gives the default SearchConfig object
         """
         self._path = path
         self._repo_config = repo_config
@@ -210,25 +212,28 @@ class FindSecretsRequest:
         """
         return self._search_config
 
+    def __str__(self):
+        """
+        :return: Returns a json string containing all the attributes of the FindSecretsRequest
+        """
+        request = dict()
+        request["path"] = self._path
+        request["repo_config"] = self._repo_config
+        request["search_config"] = self._search_config
+        request_string = json.dumps(request, indent=2)
+        return request_string
 
-def build_find_secrets_request(path: str, repo_config: RepoConfig,
-                               search_config: SearchConfig) -> FindSecretsRequest:
-    """Creates a new FindSecretsRequest object given path to git repository, RepoConfig,
-    and SearchConfig
-
-    :param str path:
-    Path to the git repository
-
-    :param repo_config:
-    Configuration object to specify repository specific attributes for the search
-
-    :param search_config:
-    Configuration object to specify other attributes for the search that can be
-    generalized to many searches
-
-    :return: FindSecretsRequest with the given parameters
-    """
-    return FindSecretsRequest(path=path, repo_config=repo_config, search_config=search_config)
+    def __repr__(self):
+        """
+        :return: Returns a string containing all the attributes of the FindSecretsRequest
+        """
+        repr_repo = repr(self._repo_config)
+        repr_search = repr(self._search_config)
+        return ("FindSecretsRequest(path={path}, "
+                "repo_config={repo_config}, "
+                "search_config={search_config})").format(path=self._path,
+                                                                       repo_config=repr_repo,
+                                                                       search_config=repr_search)
 
 def execute_find_secrets_request(request: FindSecretsRequest) -> List[Secret]:
     """
@@ -281,8 +286,6 @@ def execute_find_secrets_request(request: FindSecretsRequest) -> List[Secret]:
     secrets = _convert_default_output_to_secrets(output)
     _clean_up(output)
     return secrets
-
-
 
 def _convert_default_output_to_secrets(output: dict) -> List[Secret]:
     """
@@ -338,24 +341,26 @@ def _append_env_access_token_to_path(path, token_key):
     return path
 
 
-def find_secrets(path: str,
+def find_secrets(path: str, *,
                  repo_config: RepoConfig = None,
                  search_config: SearchConfig = None) -> List[Secret]:
     """
     Searches for secrets in the repository repo using the search configuration config
-       Returns a list of Secret objects, one for each secret found.
+    Does so by creating and executing a request to search.
 
     :param str path:
         Path to the git repository
 
     :param repo_config:
         Configuration object to specify repository specific attributes for the search
+        Default is None which will give the default RepoConfig object
 
     :param search_config:
         Configuration object to specify other attributes for the search that can be
         generalized to many searches
+        Default is None which will give the default SearchConfig object
 
     :return: list of secret objects that represent the secrets found by the search
     """
     return execute_find_secrets_request(
-        build_find_secrets_request(path, repo_config, search_config))
+        FindSecretsRequest(path, repo_config=repo_config, search_config=search_config))
