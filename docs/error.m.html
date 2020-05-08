@@ -3,9 +3,8 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 
-    <title>trufflehog_api.repo_config API documentation</title>
-    <meta name="description" content="Contains the RepoConfig class that specifies attributes for a repository
-when searching for secrets...." />
+    <title>trufflehog_api.error API documentation</title>
+    <meta name="description" content="" />
 
   <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300' rel='stylesheet' type='text/css'>
   
@@ -975,12 +974,11 @@ table {
     <li class="set"><h3><a href="#header-classes">Classes</a></h3>
       <ul>
         <li class="mono">
-        <span class="class_name"><a href="#trufflehog_api.repo_config.RepoConfig">RepoConfig</a></span>
+        <span class="class_name"><a href="#trufflehog_api.error.TrufflehogApiError">TrufflehogApiError</a></span>
         
           
   <ul>
-    <li class="mono"><a href="#trufflehog_api.repo_config.RepoConfig.__init__">__init__</a></li>
-    <li class="mono"><a href="#trufflehog_api.repo_config.RepoConfig.from_repo_config">from_repo_config</a></li>
+    <li class="mono"><a href="#trufflehog_api.error.TrufflehogApiError.__init__">__init__</a></li>
   </ul>
 
         </li>
@@ -998,122 +996,29 @@ table {
 
 
   <header id="section-intro">
-  <h1 class="title"><span class="name">trufflehog_api.repo_config</span> module</h1>
-  <p>Contains the RepoConfig class that specifies attributes for a repository
-when searching for secrets.</p>
+  <h1 class="title"><span class="name">trufflehog_api.error</span> module</h1>
   
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-trufflehog_api.repo_config', this);">Show source &equiv;</a></p>
-  <div id="source-trufflehog_api.repo_config" class="source">
-    <pre><code>"""
-Contains the RepoConfig class that specifies attributes for a repository
-when searching for secrets.
-"""
+  
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-trufflehog_api.error', this);">Show source &equiv;</a></p>
+  <div id="source-trufflehog_api.error" class="source">
+    <pre><code>import six
 
 
-class RepoConfig:
-    """Class to encapsulate details of a Git repository to search secrets in.
-    """
+class TrufflehogApiError(Exception):
+    """Wraps API specific errors and lower level exceptions thrown by library dependencies """
 
-    def __init__(self, *,
-                 branch: str = None,
-                 since_commit: str = None,
-                 access_token_env_key: str = None):
-        """Creates a new RepoConfig object
-
-        :param str branch:
-            Branch to restrict search to
-            (default is None, all branches searched)
-
-        :param str since_commit:
-            Optional commit ID hash to search upwards from
-            (default is None, all commits searched)
-
-        :param str access_token_env_key:
-            Optional access token key to be extracted from the env vars for remote,
-            private repo access
-            (default is None, no access key needed to access repo)
-        """
-        self._branch: str = branch
-        self._since_commit: str = since_commit
-        self._access_token_env_key: str = access_token_env_key
-
-    @classmethod
-    def from_repo_config(cls, repo_config,
-                         branch_override: str = None,
-                         since_commit_override: str = None,
-                         access_token_env_key_override: str = None):
-        """Static factory method which creates a new RepoConfig object from an existing RepoConfig
-        object allowing user to override certain attributes attributes
-
-        :param RepoConfig repo_config:
-            RepoConfig object to copy attributes over from
-
-        :param str branch_override:
-            Overridden value for branch to set
-            (default is None, value copied over from repo_config)
-
-        :param str since_commit_override:
-            Overridden value for since_commit to set
-            (default is None, value copied over from repo_config)
-
-        :param str access_token_env_key_override:
-            Overridden value for access_token_env_key to set.
-            (default is None, value copied over from repo_config)
-
-        :return: An RepoConfig object which is a deep copy of the repo_config object passed
-        with optionally overridden passed values.
-        """
-        branch_to_set = repo_config.branch
-        if branch_override:
-            branch_to_set = branch_override
-
-        since_commit_to_set = repo_config.since_commit
-        if since_commit_override:
-            since_commit_to_set = since_commit_override
-
-        access_token_env_key_to_set = repo_config.access_token_env_key
-        if access_token_env_key_override:
-            access_token_env_key_to_set = access_token_env_key_override
-
-        return cls(branch=branch_to_set,
-                   since_commit=since_commit_to_set,
-                   access_token_env_key=access_token_env_key_to_set)
-
-    @property
-    def branch(self) -> str:
-        """
-        :return: The specific branch to search for in the repository
-        """
-        return self._branch
-
-    @property
-    def since_commit(self) -> str:
-        """
-        :return: Specific commit ID hash to search upwards from
-        """
-        return self._since_commit
-
-    @property
-    def access_token_env_key(self) -> str:
-        """
-        :return: Access token key to be extracted from the env vars for remote private repo access
-        """
-        return self._access_token_env_key
+    def __init__(self, reason, response=None, api_code=None):
+        self.reason = six.text_type(reason)
+        self.response = response
+        self.api_code = api_code
+        super(TrufflehogApiError, self).__init__(reason)
 
     def __str__(self):
-        """
-        :return: A string with the RepoConfig object's attributes
-        """
-        return "branch: {branch}, since_commit: {since_commit}".format(
-            branch=self._branch, since_commit=self._since_commit)
+        return self.reason
 
     def __repr__(self):
-        """
-        :return: A string listing out the RepoConfig object's attributes
-        attributes
-        """
-        return ('RepoConfig(branch={0}, since_commit={1}, access_token_env_key={2})'
-                .format(str(self.branch), str(self.since_commit), str(self.access_token_env_key)))
+        return ('TrufflehogApiError(reason={0}, response={1}, api_code={2})'
+                .format(str(self.reason), str(self.response), str(self.api_code)))
 </code></pre>
   </div>
 
@@ -1125,117 +1030,28 @@ class RepoConfig:
     <h2 class="section-title" id="header-classes">Classes</h2>
       
       <div class="item">
-      <p id="trufflehog_api.repo_config.RepoConfig" class="name">class <span class="ident">RepoConfig</span></p>
+      <p id="trufflehog_api.error.TrufflehogApiError" class="name">class <span class="ident">TrufflehogApiError</span></p>
       
   
-    <div class="desc"><p>Class to encapsulate details of a Git repository to search secrets in.</p></div>
+    <div class="desc"><p>Wraps API specific errors and lower level exceptions thrown by library dependencies</p></div>
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-trufflehog_api.repo_config.RepoConfig', this);">Show source &equiv;</a></p>
-  <div id="source-trufflehog_api.repo_config.RepoConfig" class="source">
-    <pre><code>class RepoConfig:
-    """Class to encapsulate details of a Git repository to search secrets in.
-    """
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-trufflehog_api.error.TrufflehogApiError', this);">Show source &equiv;</a></p>
+  <div id="source-trufflehog_api.error.TrufflehogApiError" class="source">
+    <pre><code>class TrufflehogApiError(Exception):
+    """Wraps API specific errors and lower level exceptions thrown by library dependencies """
 
-    def __init__(self, *,
-                 branch: str = None,
-                 since_commit: str = None,
-                 access_token_env_key: str = None):
-        """Creates a new RepoConfig object
-
-        :param str branch:
-            Branch to restrict search to
-            (default is None, all branches searched)
-
-        :param str since_commit:
-            Optional commit ID hash to search upwards from
-            (default is None, all commits searched)
-
-        :param str access_token_env_key:
-            Optional access token key to be extracted from the env vars for remote,
-            private repo access
-            (default is None, no access key needed to access repo)
-        """
-        self._branch: str = branch
-        self._since_commit: str = since_commit
-        self._access_token_env_key: str = access_token_env_key
-
-    @classmethod
-    def from_repo_config(cls, repo_config,
-                         branch_override: str = None,
-                         since_commit_override: str = None,
-                         access_token_env_key_override: str = None):
-        """Static factory method which creates a new RepoConfig object from an existing RepoConfig
-        object allowing user to override certain attributes attributes
-
-        :param RepoConfig repo_config:
-            RepoConfig object to copy attributes over from
-
-        :param str branch_override:
-            Overridden value for branch to set
-            (default is None, value copied over from repo_config)
-
-        :param str since_commit_override:
-            Overridden value for since_commit to set
-            (default is None, value copied over from repo_config)
-
-        :param str access_token_env_key_override:
-            Overridden value for access_token_env_key to set.
-            (default is None, value copied over from repo_config)
-
-        :return: An RepoConfig object which is a deep copy of the repo_config object passed
-        with optionally overridden passed values.
-        """
-        branch_to_set = repo_config.branch
-        if branch_override:
-            branch_to_set = branch_override
-
-        since_commit_to_set = repo_config.since_commit
-        if since_commit_override:
-            since_commit_to_set = since_commit_override
-
-        access_token_env_key_to_set = repo_config.access_token_env_key
-        if access_token_env_key_override:
-            access_token_env_key_to_set = access_token_env_key_override
-
-        return cls(branch=branch_to_set,
-                   since_commit=since_commit_to_set,
-                   access_token_env_key=access_token_env_key_to_set)
-
-    @property
-    def branch(self) -> str:
-        """
-        :return: The specific branch to search for in the repository
-        """
-        return self._branch
-
-    @property
-    def since_commit(self) -> str:
-        """
-        :return: Specific commit ID hash to search upwards from
-        """
-        return self._since_commit
-
-    @property
-    def access_token_env_key(self) -> str:
-        """
-        :return: Access token key to be extracted from the env vars for remote private repo access
-        """
-        return self._access_token_env_key
+    def __init__(self, reason, response=None, api_code=None):
+        self.reason = six.text_type(reason)
+        self.response = response
+        self.api_code = api_code
+        super(TrufflehogApiError, self).__init__(reason)
 
     def __str__(self):
-        """
-        :return: A string with the RepoConfig object's attributes
-        """
-        return "branch: {branch}, since_commit: {since_commit}".format(
-            branch=self._branch, since_commit=self._since_commit)
+        return self.reason
 
     def __repr__(self):
-        """
-        :return: A string listing out the RepoConfig object's attributes
-        attributes
-        """
-        return ('RepoConfig(branch={0}, since_commit={1}, access_token_env_key={2})'
-                .format(str(self.branch), str(self.since_commit), str(self.access_token_env_key)))
+        return ('TrufflehogApiError(reason={0}, response={1}, api_code={2})'
+                .format(str(self.reason), str(self.response), str(self.api_code)))
 </code></pre>
   </div>
 </div>
@@ -1244,52 +1060,41 @@ class RepoConfig:
       <div class="class">
           <h3>Ancestors (in MRO)</h3>
           <ul class="class_list">
-          <li><a href="#trufflehog_api.repo_config.RepoConfig">RepoConfig</a></li>
+          <li><a href="#trufflehog_api.error.TrufflehogApiError">TrufflehogApiError</a></li>
+          <li>builtins.Exception</li>
+          <li>builtins.BaseException</li>
           <li>builtins.object</li>
           </ul>
+          <h3>Class variables</h3>
+            <div class="item">
+            <p id="trufflehog_api.error.TrufflehogApiError.args" class="name">var <span class="ident">args</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
           <h3>Static methods</h3>
             
   <div class="item">
-    <div class="name def" id="trufflehog_api.repo_config.RepoConfig.__init__">
-    <p>def <span class="ident">__init__</span>(</p><p>self)</p>
+    <div class="name def" id="trufflehog_api.error.TrufflehogApiError.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self, reason, response=None, api_code=None)</p>
     </div>
     
 
     
   
-    <div class="desc"><p>Creates a new RepoConfig object</p>
-<p>:param str branch:
-    Branch to restrict search to
-    (default is None, all branches searched)</p>
-<p>:param str since_commit:
-    Optional commit ID hash to search upwards from
-    (default is None, all commits searched)</p>
-<p>:param str access_token_env_key:
-    Optional access token key to be extracted from the env vars for remote,
-    private repo access
-    (default is None, no access key needed to access repo)</p></div>
+    <div class="desc"><p>Initialize self.  See help(type(self)) for accurate signature.</p></div>
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-trufflehog_api.repo_config.RepoConfig.__init__', this);">Show source &equiv;</a></p>
-  <div id="source-trufflehog_api.repo_config.RepoConfig.__init__" class="source">
-    <pre><code>def __init__(self, *,
-             branch: str = None,
-             since_commit: str = None,
-             access_token_env_key: str = None):
-    """Creates a new RepoConfig object
-    :param str branch:
-        Branch to restrict search to
-        (default is None, all branches searched)
-    :param str since_commit:
-        Optional commit ID hash to search upwards from
-        (default is None, all commits searched)
-    :param str access_token_env_key:
-        Optional access token key to be extracted from the env vars for remote,
-        private repo access
-        (default is None, no access key needed to access repo)
-    """
-    self._branch: str = branch
-    self._since_commit: str = since_commit
-    self._access_token_env_key: str = access_token_env_key
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-trufflehog_api.error.TrufflehogApiError.__init__', this);">Show source &equiv;</a></p>
+  <div id="source-trufflehog_api.error.TrufflehogApiError.__init__" class="source">
+    <pre><code>def __init__(self, reason, response=None, api_code=None):
+    self.reason = six.text_type(reason)
+    self.response = response
+    self.api_code = api_code
+    super(TrufflehogApiError, self).__init__(reason)
 </code></pre>
   </div>
 </div>
@@ -1298,105 +1103,35 @@ class RepoConfig:
   
           <h3>Instance variables</h3>
             <div class="item">
-            <p id="trufflehog_api.repo_config.RepoConfig.access_token_env_key" class="name">var <span class="ident">access_token_env_key</span></p>
+            <p id="trufflehog_api.error.TrufflehogApiError.api_code" class="name">var <span class="ident">api_code</span></p>
             
 
             
   
-    <div class="desc"><p>:return: Access token key to be extracted from the env vars for remote private repo access</p></div>
   <div class="source_cont">
 </div>
 
             </div>
             <div class="item">
-            <p id="trufflehog_api.repo_config.RepoConfig.branch" class="name">var <span class="ident">branch</span></p>
+            <p id="trufflehog_api.error.TrufflehogApiError.reason" class="name">var <span class="ident">reason</span></p>
             
 
             
   
-    <div class="desc"><p>:return: The specific branch to search for in the repository</p></div>
   <div class="source_cont">
 </div>
 
             </div>
             <div class="item">
-            <p id="trufflehog_api.repo_config.RepoConfig.since_commit" class="name">var <span class="ident">since_commit</span></p>
+            <p id="trufflehog_api.error.TrufflehogApiError.response" class="name">var <span class="ident">response</span></p>
             
 
             
   
-    <div class="desc"><p>:return: Specific commit ID hash to search upwards from</p></div>
   <div class="source_cont">
 </div>
 
             </div>
-          <h3>Methods</h3>
-            
-  <div class="item">
-    <div class="name def" id="trufflehog_api.repo_config.RepoConfig.from_repo_config">
-    <p>def <span class="ident">from_repo_config</span>(</p><p>cls, repo_config, branch_override=None, since_commit_override=None, access_token_env_key_override=None)</p>
-    </div>
-    
-
-    
-  
-    <div class="desc"><p>Static factory method which creates a new RepoConfig object from an existing RepoConfig
-object allowing user to override certain attributes attributes</p>
-<p>:param RepoConfig repo_config:
-    RepoConfig object to copy attributes over from</p>
-<p>:param str branch_override:
-    Overridden value for branch to set
-    (default is None, value copied over from repo_config)</p>
-<p>:param str since_commit_override:
-    Overridden value for since_commit to set
-    (default is None, value copied over from repo_config)</p>
-<p>:param str access_token_env_key_override:
-    Overridden value for access_token_env_key to set.
-    (default is None, value copied over from repo_config)</p>
-<p>:return: An RepoConfig object which is a deep copy of the repo_config object passed
-with optionally overridden passed values.</p></div>
-  <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-trufflehog_api.repo_config.RepoConfig.from_repo_config', this);">Show source &equiv;</a></p>
-  <div id="source-trufflehog_api.repo_config.RepoConfig.from_repo_config" class="source">
-    <pre><code>@classmethod
-def from_repo_config(cls, repo_config,
-                     branch_override: str = None,
-                     since_commit_override: str = None,
-                     access_token_env_key_override: str = None):
-    """Static factory method which creates a new RepoConfig object from an existing RepoConfig
-    object allowing user to override certain attributes attributes
-    :param RepoConfig repo_config:
-        RepoConfig object to copy attributes over from
-    :param str branch_override:
-        Overridden value for branch to set
-        (default is None, value copied over from repo_config)
-    :param str since_commit_override:
-        Overridden value for since_commit to set
-        (default is None, value copied over from repo_config)
-    :param str access_token_env_key_override:
-        Overridden value for access_token_env_key to set.
-        (default is None, value copied over from repo_config)
-    :return: An RepoConfig object which is a deep copy of the repo_config object passed
-    with optionally overridden passed values.
-    """
-    branch_to_set = repo_config.branch
-    if branch_override:
-        branch_to_set = branch_override
-    since_commit_to_set = repo_config.since_commit
-    if since_commit_override:
-        since_commit_to_set = since_commit_override
-    access_token_env_key_to_set = repo_config.access_token_env_key
-    if access_token_env_key_override:
-        access_token_env_key_to_set = access_token_env_key_override
-    return cls(branch=branch_to_set,
-               since_commit=since_commit_to_set,
-               access_token_env_key=access_token_env_key_to_set)
-</code></pre>
-  </div>
-</div>
-
-  </div>
-  
       </div>
       </div>
 

@@ -14,6 +14,7 @@ from typing import List
 from git.repo.fun import is_git_dir
 from truffleHog import truffleHog
 
+from trufflehog_api.error import TrufflehogApiError
 from trufflehog_api.repo_config import RepoConfig
 from trufflehog_api.search_config import SearchConfig
 
@@ -234,7 +235,12 @@ def find_secrets(path: str,
         Configuration object to specify other attributes for the search that can be
         generalized to many searches
 
+    :raises TrufflehogApiError:
+        wraps an exception that occurred on calling truffleHog.find_strings()
+
     :return: list of secret objects that represent the secrets found by the search
+
+    :rtype: List[Secret]
     """
 
     if not repo_config:
@@ -261,16 +267,20 @@ def find_secrets(path: str,
 
     do_regex = search_config.regexes
 
-    output = truffleHog.find_strings(git_url=git_url,
-                                     since_commit=repo_config.since_commit,
-                                     max_depth=search_config.max_depth,
-                                     do_regex=do_regex,
-                                     do_entropy=search_config.entropy_checks_enabled,
-                                     custom_regexes=search_config.regexes,
-                                     branch=repo_config.branch,
-                                     repo_path=repo_path,
-                                     path_inclusions=search_config.include_search_paths,
-                                     path_exclusions=search_config.exclude_search_paths)
-    secrets = _convert_default_output_to_secrets(output)
-    _clean_up(output)
-    return secrets
+    try:
+        output = truffleHog.find_strings(git_url=git_url,
+                                         since_commit=repo_config.since_commit,
+                                         max_depth=search_config.max_depth,
+                                         do_regex=do_regex,
+                                         do_entropy=search_config.entropy_checks_enabled,
+                                         custom_regexes=search_config.regexes,
+                                         branch=repo_config.branch,
+                                         repo_path=repo_path,
+                                         path_inclusions=search_config.include_search_paths,
+                                         path_exclusions=search_config.exclude_search_paths)
+        secrets = _convert_default_output_to_secrets(output)
+        _clean_up(output)
+        return secrets
+
+    except Exception as e:
+        raise TrufflehogApiError(e)

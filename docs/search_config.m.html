@@ -987,6 +987,9 @@ table {
   <ul>
     <li class="mono"><a href="#trufflehog_api.search_config.SearchConfig.__init__">__init__</a></li>
     <li class="mono"><a href="#trufflehog_api.search_config.SearchConfig.default_regexes">default_regexes</a></li>
+    <li class="mono"><a href="#trufflehog_api.search_config.SearchConfig.from_dict">from_dict</a></li>
+    <li class="mono"><a href="#trufflehog_api.search_config.SearchConfig.from_str">from_str</a></li>
+    <li class="mono"><a href="#trufflehog_api.search_config.SearchConfig.to_dict">to_dict</a></li>
   </ul>
 
         </li>
@@ -1009,7 +1012,8 @@ table {
   
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-trufflehog_api.search_config', this);">Show source &equiv;</a></p>
   <div id="source-trufflehog_api.search_config" class="source">
-    <pre><code>from copy import copy
+    <pre><code>import json
+from copy import copy
 from typing import List, Dict
 
 from truffleHogRegexes.regexChecks import regexes as default_regexes
@@ -1024,8 +1028,7 @@ class SearchConfig:
                  include_search_paths: List[str] = None,
                  exclude_search_paths: List[str] = None,
                  entropy_checks_enabled: bool = True,
-                 regexes: Dict[str, str] = None,
-                 ):
+                 regexes: Dict[str, str] = None):
         """Creates a new default search configuration object with entropy and regex checks off
 
         :param str max_depth:
@@ -1048,7 +1051,7 @@ class SearchConfig:
             those character sets in each diff. If at any point a high entropy string >20 characters
             is detected
             (default is True, this is the default secret finding mechanism).
-            
+
         :param dict regexes:
             Use this argument to pass in a custom dictionary of regexes, eg. to search for project
             specific strings. The dictionary has keys as the description of a regex and value as
@@ -1114,17 +1117,122 @@ class SearchConfig:
         """
         return copy(default_regexes)
 
+    @staticmethod
+    def from_str(input_config: str):
+        """
+        Takes a json string with the desire configuration and generates a SearchConfig object
+
+        :param str input_config:
+            The json string containing the configuration
+
+        :return: Returns a SearchConfig from the a json string
+        """
+        config_dict = json.loads(input_config, strict=False)
+        max_depth = 1000000
+        include_search_paths = None
+        exclude_search_paths = None
+        entropy_checks_enabled = True
+        regexes = None
+
+        if "max_depth" in config_dict:
+            max_depth = int(config_dict["max_depth"])
+        if "include_search_paths" in config_dict:
+            include_search_paths = config_dict.get("include_search_paths")
+        if "exclude_search_paths" in config_dict:
+            exclude_search_paths = config_dict.get("exclude_search_paths")
+        if "entropy_checks_enabled" in config_dict:
+            entropy_checks_enabled = config_dict.get("entropy_checks_enabled")
+        if "regexes" in config_dict:
+            regexes = config_dict.get("regexes")
+
+        config = SearchConfig(
+            max_depth=max_depth,
+            include_search_paths=include_search_paths,
+            exclude_search_paths=exclude_search_paths,
+            entropy_checks_enabled=entropy_checks_enabled,
+            regexes=regexes,
+        )
+
+        return config
+
     def __str__(self):
         """
-        TODO
+        :return: Returns a json string containing all the attributes of the SearchConfig
         """
-        raise NotImplementedError()
+        config = dict()
+        config["max_depth"] = self._max_depth
+        config["entropy_checks_enabled"] = self._entropy_checks_enabled
+        config["include_search_paths"] = self._include_search_paths
+        config["exclude_search_paths"] = self._exclude_search_paths
+        config["regexes"] = self._regexes
+        config_string = json.dumps(config, indent=2)
+        return config_string
 
     def __repr__(self):
         """
-        TODO
+        :return: Returns a string containing all the attributes of the SearchConfig
         """
-        raise NotImplementedError()
+        return ("SearchConfig(max_depth={max_depth},"
+                "entropy_checks_enabled={entropy_enabled},"
+                "include_search_paths={incl_search_paths},"
+                "exclude_search_paths={excl_search_paths},"
+                "entropy_checks_enabled={entropy_enabled},"
+                "regexes={regexes})").format(max_depth=str(self._max_depth),
+                                             entropy_enabled=str(self._entropy_checks_enabled),
+                                             incl_search_paths=str(self._include_search_paths),
+                                             excl_search_paths=str(self._exclude_search_paths),
+                                             regexes=str(self._regexes))
+
+    def to_dict(self):
+        """
+        :return: Returns a dictionary containing all the attributes of the SearchConfig
+        """
+        config_dict = dict()
+        config_dict["max_depth"] = self._max_depth
+        config_dict["entropy_enabled"] = self._entropy_checks_enabled
+        config_dict["include_search_paths"] = self._include_search_paths
+        config_dict["exclude_search_paths"] = self._exclude_search_paths
+        config_dict["regexes"] = self._regexes
+        return config_dict
+
+    @staticmethod
+    def from_dict(input_config: dict):
+        """
+        Takes in a dictionary with the search configurations correctly formatted
+        and generates a SearchConfig object
+
+        :param dict input_config:
+            The search configurations in the form of a dictionary.
+        :return: Returns the object containing all the attributes specified in the dict
+        """
+
+        config_dict = json.loads(input_config, strict=False)
+        max_depth = 1000000
+        include_search_paths = None
+        exclude_search_paths = None
+        entropy_checks_enabled = True
+        regexes = None
+
+        if "max_depth" in config_dict:
+            max_depth = int(config_dict["max_depth"])
+        if "include_search_paths" in config_dict:
+            include_search_paths = config_dict.get("include_search_paths")
+        if "exclude_search_paths" in config_dict:
+            exclude_search_paths = config_dict.get("exclude_search_paths")
+        if "entropy_checks_enabled" in config_dict:
+            entropy_checks_enabled = config_dict.get("entropy_checks_enabled")
+        if "regexes" in config_dict:
+            regexes = config_dict.get("regexes")
+
+        config = SearchConfig(
+            max_depth=max_depth,
+            include_search_paths=include_search_paths,
+            exclude_search_paths=exclude_search_paths,
+            entropy_checks_enabled=entropy_checks_enabled,
+            regexes=regexes,
+        )
+
+        return config
 </code></pre>
   </div>
 
@@ -1161,8 +1269,7 @@ class SearchConfig:
                  include_search_paths: List[str] = None,
                  exclude_search_paths: List[str] = None,
                  entropy_checks_enabled: bool = True,
-                 regexes: Dict[str, str] = None,
-                 ):
+                 regexes: Dict[str, str] = None):
         """Creates a new default search configuration object with entropy and regex checks off
 
         :param str max_depth:
@@ -1185,7 +1292,7 @@ class SearchConfig:
             those character sets in each diff. If at any point a high entropy string >20 characters
             is detected
             (default is True, this is the default secret finding mechanism).
-            
+
         :param dict regexes:
             Use this argument to pass in a custom dictionary of regexes, eg. to search for project
             specific strings. The dictionary has keys as the description of a regex and value as
@@ -1251,17 +1358,122 @@ class SearchConfig:
         """
         return copy(default_regexes)
 
+    @staticmethod
+    def from_str(input_config: str):
+        """
+        Takes a json string with the desire configuration and generates a SearchConfig object
+
+        :param str input_config:
+            The json string containing the configuration
+
+        :return: Returns a SearchConfig from the a json string
+        """
+        config_dict = json.loads(input_config, strict=False)
+        max_depth = 1000000
+        include_search_paths = None
+        exclude_search_paths = None
+        entropy_checks_enabled = True
+        regexes = None
+
+        if "max_depth" in config_dict:
+            max_depth = int(config_dict["max_depth"])
+        if "include_search_paths" in config_dict:
+            include_search_paths = config_dict.get("include_search_paths")
+        if "exclude_search_paths" in config_dict:
+            exclude_search_paths = config_dict.get("exclude_search_paths")
+        if "entropy_checks_enabled" in config_dict:
+            entropy_checks_enabled = config_dict.get("entropy_checks_enabled")
+        if "regexes" in config_dict:
+            regexes = config_dict.get("regexes")
+
+        config = SearchConfig(
+            max_depth=max_depth,
+            include_search_paths=include_search_paths,
+            exclude_search_paths=exclude_search_paths,
+            entropy_checks_enabled=entropy_checks_enabled,
+            regexes=regexes,
+        )
+
+        return config
+
     def __str__(self):
         """
-        TODO
+        :return: Returns a json string containing all the attributes of the SearchConfig
         """
-        raise NotImplementedError()
+        config = dict()
+        config["max_depth"] = self._max_depth
+        config["entropy_checks_enabled"] = self._entropy_checks_enabled
+        config["include_search_paths"] = self._include_search_paths
+        config["exclude_search_paths"] = self._exclude_search_paths
+        config["regexes"] = self._regexes
+        config_string = json.dumps(config, indent=2)
+        return config_string
 
     def __repr__(self):
         """
-        TODO
+        :return: Returns a string containing all the attributes of the SearchConfig
         """
-        raise NotImplementedError()
+        return ("SearchConfig(max_depth={max_depth},"
+                "entropy_checks_enabled={entropy_enabled},"
+                "include_search_paths={incl_search_paths},"
+                "exclude_search_paths={excl_search_paths},"
+                "entropy_checks_enabled={entropy_enabled},"
+                "regexes={regexes})").format(max_depth=str(self._max_depth),
+                                             entropy_enabled=str(self._entropy_checks_enabled),
+                                             incl_search_paths=str(self._include_search_paths),
+                                             excl_search_paths=str(self._exclude_search_paths),
+                                             regexes=str(self._regexes))
+
+    def to_dict(self):
+        """
+        :return: Returns a dictionary containing all the attributes of the SearchConfig
+        """
+        config_dict = dict()
+        config_dict["max_depth"] = self._max_depth
+        config_dict["entropy_enabled"] = self._entropy_checks_enabled
+        config_dict["include_search_paths"] = self._include_search_paths
+        config_dict["exclude_search_paths"] = self._exclude_search_paths
+        config_dict["regexes"] = self._regexes
+        return config_dict
+
+    @staticmethod
+    def from_dict(input_config: dict):
+        """
+        Takes in a dictionary with the search configurations correctly formatted
+        and generates a SearchConfig object
+
+        :param dict input_config:
+            The search configurations in the form of a dictionary.
+        :return: Returns the object containing all the attributes specified in the dict
+        """
+
+        config_dict = json.loads(input_config, strict=False)
+        max_depth = 1000000
+        include_search_paths = None
+        exclude_search_paths = None
+        entropy_checks_enabled = True
+        regexes = None
+
+        if "max_depth" in config_dict:
+            max_depth = int(config_dict["max_depth"])
+        if "include_search_paths" in config_dict:
+            include_search_paths = config_dict.get("include_search_paths")
+        if "exclude_search_paths" in config_dict:
+            exclude_search_paths = config_dict.get("exclude_search_paths")
+        if "entropy_checks_enabled" in config_dict:
+            entropy_checks_enabled = config_dict.get("entropy_checks_enabled")
+        if "regexes" in config_dict:
+            regexes = config_dict.get("regexes")
+
+        config = SearchConfig(
+            max_depth=max_depth,
+            include_search_paths=include_search_paths,
+            exclude_search_paths=exclude_search_paths,
+            entropy_checks_enabled=entropy_checks_enabled,
+            regexes=regexes,
+        )
+
+        return config
 </code></pre>
   </div>
 </div>
@@ -1317,8 +1529,7 @@ class SearchConfig:
              include_search_paths: List[str] = None,
              exclude_search_paths: List[str] = None,
              entropy_checks_enabled: bool = True,
-             regexes: Dict[str, str] = None,
-             ):
+             regexes: Dict[str, str] = None):
     """Creates a new default search configuration object with entropy and regex checks off
     :param str max_depth:
         Maximum commit depth to continue search till (default is 1000000)
@@ -1337,7 +1548,6 @@ class SearchConfig:
         those character sets in each diff. If at any point a high entropy string >20 characters
         is detected
         (default is True, this is the default secret finding mechanism).
-        
     :param dict regexes:
         Use this argument to pass in a custom dictionary of regexes, eg. to search for project
         specific strings. The dictionary has keys as the description of a regex and value as
@@ -1380,6 +1590,146 @@ def default_regexes() -> Dict[str, str]:
     library
     """
     return copy(default_regexes)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="trufflehog_api.search_config.SearchConfig.from_dict">
+    <p>def <span class="ident">from_dict</span>(</p><p>input_config)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Takes in a dictionary with the search configurations correctly formatted
+and generates a SearchConfig object</p>
+<p>:param dict input_config:
+    The search configurations in the form of a dictionary.
+:return: Returns the object containing all the attributes specified in the dict</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-trufflehog_api.search_config.SearchConfig.from_dict', this);">Show source &equiv;</a></p>
+  <div id="source-trufflehog_api.search_config.SearchConfig.from_dict" class="source">
+    <pre><code>@staticmethod
+def from_dict(input_config: dict):
+    """
+    Takes in a dictionary with the search configurations correctly formatted
+    and generates a SearchConfig object
+    :param dict input_config:
+        The search configurations in the form of a dictionary.
+    :return: Returns the object containing all the attributes specified in the dict
+    """
+    config_dict = json.loads(input_config, strict=False)
+    max_depth = 1000000
+    include_search_paths = None
+    exclude_search_paths = None
+    entropy_checks_enabled = True
+    regexes = None
+    if "max_depth" in config_dict:
+        max_depth = int(config_dict["max_depth"])
+    if "include_search_paths" in config_dict:
+        include_search_paths = config_dict.get("include_search_paths")
+    if "exclude_search_paths" in config_dict:
+        exclude_search_paths = config_dict.get("exclude_search_paths")
+    if "entropy_checks_enabled" in config_dict:
+        entropy_checks_enabled = config_dict.get("entropy_checks_enabled")
+    if "regexes" in config_dict:
+        regexes = config_dict.get("regexes")
+    config = SearchConfig(
+        max_depth=max_depth,
+        include_search_paths=include_search_paths,
+        exclude_search_paths=exclude_search_paths,
+        entropy_checks_enabled=entropy_checks_enabled,
+        regexes=regexes,
+    )
+    return config
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="trufflehog_api.search_config.SearchConfig.from_str">
+    <p>def <span class="ident">from_str</span>(</p><p>input_config)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Takes a json string with the desire configuration and generates a SearchConfig object</p>
+<p>:param str input_config:
+    The json string containing the configuration</p>
+<p>:return: Returns a SearchConfig from the a json string</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-trufflehog_api.search_config.SearchConfig.from_str', this);">Show source &equiv;</a></p>
+  <div id="source-trufflehog_api.search_config.SearchConfig.from_str" class="source">
+    <pre><code>@staticmethod
+def from_str(input_config: str):
+    """
+    Takes a json string with the desire configuration and generates a SearchConfig object
+    :param str input_config:
+        The json string containing the configuration
+    :return: Returns a SearchConfig from the a json string
+    """
+    config_dict = json.loads(input_config, strict=False)
+    max_depth = 1000000
+    include_search_paths = None
+    exclude_search_paths = None
+    entropy_checks_enabled = True
+    regexes = None
+    if "max_depth" in config_dict:
+        max_depth = int(config_dict["max_depth"])
+    if "include_search_paths" in config_dict:
+        include_search_paths = config_dict.get("include_search_paths")
+    if "exclude_search_paths" in config_dict:
+        exclude_search_paths = config_dict.get("exclude_search_paths")
+    if "entropy_checks_enabled" in config_dict:
+        entropy_checks_enabled = config_dict.get("entropy_checks_enabled")
+    if "regexes" in config_dict:
+        regexes = config_dict.get("regexes")
+    config = SearchConfig(
+        max_depth=max_depth,
+        include_search_paths=include_search_paths,
+        exclude_search_paths=exclude_search_paths,
+        entropy_checks_enabled=entropy_checks_enabled,
+        regexes=regexes,
+    )
+    return config
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="trufflehog_api.search_config.SearchConfig.to_dict">
+    <p>def <span class="ident">to_dict</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>:return: Returns a dictionary containing all the attributes of the SearchConfig</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-trufflehog_api.search_config.SearchConfig.to_dict', this);">Show source &equiv;</a></p>
+  <div id="source-trufflehog_api.search_config.SearchConfig.to_dict" class="source">
+    <pre><code>def to_dict(self):
+    """
+    :return: Returns a dictionary containing all the attributes of the SearchConfig
+    """
+    config_dict = dict()
+    config_dict["max_depth"] = self._max_depth
+    config_dict["entropy_enabled"] = self._entropy_checks_enabled
+    config_dict["include_search_paths"] = self._include_search_paths
+    config_dict["exclude_search_paths"] = self._exclude_search_paths
+    config_dict["regexes"] = self._regexes
+    return config_dict
 </code></pre>
   </div>
 </div>
