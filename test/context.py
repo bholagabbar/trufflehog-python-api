@@ -17,7 +17,11 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 
 import trufflehog_api
 
+from trufflehog_api.error import TrufflehogApiError
 from trufflehog_api import RepoConfig
 from trufflehog_api.search_config import SearchConfig
-from trufflehog_api.find_secrets import (Secret, find_secrets, FindSecretsRequest)
-from trufflehog_api.error import TrufflehogApiError
+from trufflehog_api.find_secrets import (Secret,
+                                         find_secrets,
+                                         FindSecretsRequest,
+                                         execute_find_secrets_request,
+                                         batch_execute_find_secrets_request)

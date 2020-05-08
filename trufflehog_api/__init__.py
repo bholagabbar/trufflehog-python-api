@@ -5,6 +5,8 @@ A rewritten version of the truffleHog API [1].
 """
 
 from trufflehog_api.error import TrufflehogApiError
-from trufflehog_api.find_secrets import (Secret, find_secrets, FindSecretsRequest)
+from trufflehog_api.find_secrets import (Secret, find_secrets,
+                                         FindSecretsRequest,
+                                         batch_execute_find_secrets_request)
 from trufflehog_api.repo_config import RepoConfig
 from trufflehog_api.search_config import SearchConfig
