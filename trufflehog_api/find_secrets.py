@@ -243,31 +243,31 @@ def find_secrets(path: str,
     :rtype: List[Secret]
     """
 
+    if not repo_config:
+        repo_config = RepoConfig()
+
+    if not search_config:
+        search_config = SearchConfig()
+
+    token_key = repo_config.access_token_env_key
+
+    if is_git_dir(path + os.path.sep + ".git"):
+        # Is repo is local repository and env access token is present, display warning.
+        if token_key and token_key in os.environ:
+            warnings.warn("Warning: local repository path provided with an access token - "
+                          "Token will be ignored")
+        git_url = None
+        repo_path = path
+    else:
+        # Is repo is remote, append env access if present to the path
+        git_url = path
+        if token_key and token_key in os.environ:
+            git_url = _append_env_access_token_to_path(path, token_key)
+        repo_path = None
+
+    do_regex = search_config.regexes
+
     try:
-        if not repo_config:
-            repo_config = RepoConfig()
-
-        if not search_config:
-            search_config = SearchConfig()
-
-        token_key = repo_config.access_token_env_key
-
-        if is_git_dir(path + os.path.sep + ".git"):
-            # Is repo is local repository and env access token is present, display warning.
-            if token_key and token_key in os.environ:
-                warnings.warn("Warning: local repository path provided with an access token - "
-                              "Token will be ignored")
-            git_url = None
-            repo_path = path
-        else:
-            # Is repo is remote, append env access if present to the path
-            git_url = path
-            if token_key and token_key in os.environ:
-                git_url = _append_env_access_token_to_path(path, token_key)
-            repo_path = None
-
-        do_regex = search_config.regexes
-
         output = truffleHog.find_strings(git_url=git_url,
                                          since_commit=repo_config.since_commit,
                                          max_depth=search_config.max_depth,
