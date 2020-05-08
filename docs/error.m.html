@@ -4,7 +4,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 
     <title>trufflehog_api.error API documentation</title>
-    <meta name="description" content="" />
+    <meta name="description" content="Contains the TrufflehogApiError which is the exception thrown at the API layer" />
 
   <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300' rel='stylesheet' type='text/css'>
   
@@ -997,18 +997,20 @@ table {
 
   <header id="section-intro">
   <h1 class="title"><span class="name">trufflehog_api.error</span> module</h1>
-  
+  <p>Contains the TrufflehogApiError which is the exception thrown at the API layer</p>
   
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-trufflehog_api.error', this);">Show source &equiv;</a></p>
   <div id="source-trufflehog_api.error" class="source">
-    <pre><code>import six
+    <pre><code>"""
+Contains the TrufflehogApiError which is the exception thrown at the API layer
+"""
 
 
 class TrufflehogApiError(Exception):
     """Wraps API specific errors and lower level exceptions thrown by library dependencies """
 
     def __init__(self, reason, response=None, api_code=None):
-        self.reason = six.text_type(reason)
+        self.reason = reason
         self.response = response
         self.api_code = api_code
         super(TrufflehogApiError, self).__init__(reason)
@@ -1041,7 +1043,7 @@ class TrufflehogApiError(Exception):
     """Wraps API specific errors and lower level exceptions thrown by library dependencies """
 
     def __init__(self, reason, response=None, api_code=None):
-        self.reason = six.text_type(reason)
+        self.reason = reason
         self.response = response
         self.api_code = api_code
         super(TrufflehogApiError, self).__init__(reason)
@@ -1091,7 +1093,7 @@ class TrufflehogApiError(Exception):
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-trufflehog_api.error.TrufflehogApiError.__init__', this);">Show source &equiv;</a></p>
   <div id="source-trufflehog_api.error.TrufflehogApiError.__init__" class="source">
     <pre><code>def __init__(self, reason, response=None, api_code=None):
-    self.reason = six.text_type(reason)
+    self.reason = reason
     self.response = response
     self.api_code = api_code
     super(TrufflehogApiError, self).__init__(reason)
