@@ -171,7 +171,7 @@ class FindSecretsRequest:
     """
 
     def __init__(self,
-                 path: str, *,
+                 path: str,
                  repo_config: RepoConfig = None,
                  search_config: SearchConfig = None):
         """Creates a new FindSecretsRequest object
@@ -346,7 +346,7 @@ def _append_env_access_token_to_path(path, token_key):
     return path
 
 
-def find_secrets(path: str, *,
+def find_secrets(path: str,
                  repo_config: RepoConfig = None,
                  search_config: SearchConfig = None) -> List[Secret]:
     """
