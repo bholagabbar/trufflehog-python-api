@@ -14,8 +14,7 @@ class SearchConfig:
                  include_search_paths: List[str] = None,
                  exclude_search_paths: List[str] = None,
                  entropy_checks_enabled: bool = True,
-                 regexes: Dict[str, str] = None,
-                 ):
+                 regexes: Dict[str, str] = None):
         """Creates a new default search configuration object with entropy and regex checks off
 
         :param str max_depth:

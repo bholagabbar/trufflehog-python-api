@@ -1028,8 +1028,7 @@ class SearchConfig:
                  include_search_paths: List[str] = None,
                  exclude_search_paths: List[str] = None,
                  entropy_checks_enabled: bool = True,
-                 regexes: Dict[str, str] = None,
-                 ):
+                 regexes: Dict[str, str] = None):
         """Creates a new default search configuration object with entropy and regex checks off
 
         :param str max_depth:
@@ -1178,6 +1177,7 @@ class SearchConfig:
                 "include_search_paths={incl_search_paths}, "
                 "exclude_search_paths={excl_search_paths}, "
                 "entropy_checks_enabled={entropy_enabled}, "
+
                 "regexes={regexes})").format(max_depth=str(self._max_depth),
                                              entropy_enabled=str(self._entropy_checks_enabled),
                                              incl_search_paths=str(self._include_search_paths),
@@ -1270,8 +1270,7 @@ class SearchConfig:
                  include_search_paths: List[str] = None,
                  exclude_search_paths: List[str] = None,
                  entropy_checks_enabled: bool = True,
-                 regexes: Dict[str, str] = None,
-                 ):
+                 regexes: Dict[str, str] = None):
         """Creates a new default search configuration object with entropy and regex checks off
 
         :param str max_depth:
@@ -1531,8 +1530,7 @@ class SearchConfig:
              include_search_paths: List[str] = None,
              exclude_search_paths: List[str] = None,
              entropy_checks_enabled: bool = True,
-             regexes: Dict[str, str] = None,
-             ):
+             regexes: Dict[str, str] = None):
     """Creates a new default search configuration object with entropy and regex checks off
     :param str max_depth:
         Maximum commit depth to continue search till (default is 1000000)

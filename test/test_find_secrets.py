@@ -2,7 +2,8 @@ import datetime
 import os
 import unittest
 
-from .context import (SearchConfig, find_secrets, RepoConfig, Secret, FindSecretsRequest)
+from .context import (SearchConfig, find_secrets, RepoConfig, 
+                      TrufflehogApiError, Secret, FindSecretsRequest)
 
 # Set this locally or in the CI config, value should be Github API Token
 TOKEN_ENV_KEY = "TEST_GITHUB_TOKEN"
@@ -133,6 +134,8 @@ class TestFindSecrets(unittest.TestCase):
                                         "access_token_env_key=None), "
                                         "search_config=None)")
 
+    def test_find_secrets_error(self):
+        self.assertRaises(TrufflehogApiError, find_secrets, 'invalid_url')
 
 
 if __name__ == '__main__':

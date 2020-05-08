@@ -3,10 +3,8 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 
-    <title>trufflehog_api API documentation</title>
-    <meta name="description" content="A rewritten version of the truffleHog API [1].
-
-[1]: https://github.com/dxa4481/truffleHog/tree/53a1..." />
+    <title>trufflehog_api.error API documentation</title>
+    <meta name="description" content="" />
 
   <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300' rel='stylesheet' type='text/css'>
   
@@ -973,15 +971,20 @@ table {
     <ul id="index">
 
 
-
-    <li class="set"><h3><a href="#header-submodules">Sub-modules</a></h3>
+    <li class="set"><h3><a href="#header-classes">Classes</a></h3>
       <ul>
-        <li class="mono"><a href="error.m.html">trufflehog_api.error</a></li>
-        <li class="mono"><a href="find_secrets.m.html">trufflehog_api.find_secrets</a></li>
-        <li class="mono"><a href="repo_config.m.html">trufflehog_api.repo_config</a></li>
-        <li class="mono"><a href="search_config.m.html">trufflehog_api.search_config</a></li>
+        <li class="mono">
+        <span class="class_name"><a href="#trufflehog_api.error.TrufflehogApiError">TrufflehogApiError</a></span>
+        
+          
+  <ul>
+    <li class="mono"><a href="#trufflehog_api.error.TrufflehogApiError.__init__">__init__</a></li>
+  </ul>
+
+        </li>
       </ul>
     </li>
+
     </ul>
   </div>
 
@@ -993,22 +996,29 @@ table {
 
 
   <header id="section-intro">
-  <h1 class="title"><span class="name">trufflehog_api</span> module</h1>
-  <p>A rewritten version of the truffleHog API <a href="https://github.com/dxa4481/truffleHog/tree/53a16df0a6f9a56ec11ad85abd193ea6feac5ff1">1</a>.</p>
+  <h1 class="title"><span class="name">trufflehog_api.error</span> module</h1>
   
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-trufflehog_api', this);">Show source &equiv;</a></p>
-  <div id="source-trufflehog_api" class="source">
-    <pre><code>"""
-A rewritten version of the truffleHog API [1].
+  
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-trufflehog_api.error', this);">Show source &equiv;</a></p>
+  <div id="source-trufflehog_api.error" class="source">
+    <pre><code>import six
 
-[1]: https://github.com/dxa4481/truffleHog/tree/53a16df0a6f9a56ec11ad85abd193ea6feac5ff1
-"""
 
-from trufflehog_api.error import TrufflehogApiError
-from trufflehog_api.find_secrets import (Secret, find_secrets, FindSecretsRequest)
-from trufflehog_api.find_secrets import (Secret, find_secrets)
-from trufflehog_api.repo_config import RepoConfig
-from trufflehog_api.search_config import SearchConfig
+class TrufflehogApiError(Exception):
+    """Wraps API specific errors and lower level exceptions thrown by library dependencies """
+
+    def __init__(self, reason, response=None, api_code=None):
+        self.reason = six.text_type(reason)
+        self.response = response
+        self.api_code = api_code
+        super(TrufflehogApiError, self).__init__(reason)
+
+    def __str__(self):
+        return self.reason
+
+    def __repr__(self):
+        return ('TrufflehogApiError(reason={0}, response={1}, api_code={2})'
+                .format(str(self.reason), str(self.response), str(self.api_code)))
 </code></pre>
   </div>
 
@@ -1017,37 +1027,114 @@ from trufflehog_api.search_config import SearchConfig
   <section id="section-items">
 
 
-
-    <h2 class="section-title" id="header-submodules">Sub-modules</h2>
+    <h2 class="section-title" id="header-classes">Classes</h2>
+      
       <div class="item">
-      <p class="name"><a href="error.m.html">trufflehog_api.error</a></p>
+      <p id="trufflehog_api.error.TrufflehogApiError" class="name">class <span class="ident">TrufflehogApiError</span></p>
       
   
+    <div class="desc"><p>Wraps API specific errors and lower level exceptions thrown by library dependencies</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-trufflehog_api.error.TrufflehogApiError', this);">Show source &equiv;</a></p>
+  <div id="source-trufflehog_api.error.TrufflehogApiError" class="source">
+    <pre><code>class TrufflehogApiError(Exception):
+    """Wraps API specific errors and lower level exceptions thrown by library dependencies """
 
-      </div>
-      <div class="item">
-      <p class="name"><a href="find_secrets.m.html">trufflehog_api.find_secrets</a></p>
-      
+    def __init__(self, reason, response=None, api_code=None):
+        self.reason = six.text_type(reason)
+        self.response = response
+        self.api_code = api_code
+        super(TrufflehogApiError, self).__init__(reason)
+
+    def __str__(self):
+        return self.reason
+
+    def __repr__(self):
+        return ('TrufflehogApiError(reason={0}, response={1}, api_code={2})'
+                .format(str(self.reason), str(self.response), str(self.api_code)))
+</code></pre>
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#trufflehog_api.error.TrufflehogApiError">TrufflehogApiError</a></li>
+          <li>builtins.Exception</li>
+          <li>builtins.BaseException</li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Class variables</h3>
+            <div class="item">
+            <p id="trufflehog_api.error.TrufflehogApiError.args" class="name">var <span class="ident">args</span></p>
+            
+
+            
   
-    <div class="desc"><p>Allows users to search for secrets within a git repository as specified
-by RepoConfig and SearchConfig. Presents the output as a list of Secret
-objects that can be easily parsed or outputted.</p></div>
+  <div class="source_cont">
+</div>
 
-      </div>
-      <div class="item">
-      <p class="name"><a href="repo_config.m.html">trufflehog_api.repo_config</a></p>
-      
+            </div>
+          <h3>Static methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="trufflehog_api.error.TrufflehogApiError.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self, reason, response=None, api_code=None)</p>
+    </div>
+    
+
+    
   
-    <div class="desc"><p>Contains the RepoConfig class that specifies attributes for a repository
-when searching for secrets.</p></div>
+    <div class="desc"><p>Initialize self.  See help(type(self)) for accurate signature.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-trufflehog_api.error.TrufflehogApiError.__init__', this);">Show source &equiv;</a></p>
+  <div id="source-trufflehog_api.error.TrufflehogApiError.__init__" class="source">
+    <pre><code>def __init__(self, reason, response=None, api_code=None):
+    self.reason = six.text_type(reason)
+    self.response = response
+    self.api_code = api_code
+    super(TrufflehogApiError, self).__init__(reason)
+</code></pre>
+  </div>
+</div>
 
-      </div>
-      <div class="item">
-      <p class="name"><a href="search_config.m.html">trufflehog_api.search_config</a></p>
-      
+  </div>
   
+          <h3>Instance variables</h3>
+            <div class="item">
+            <p id="trufflehog_api.error.TrufflehogApiError.api_code" class="name">var <span class="ident">api_code</span></p>
+            
 
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="trufflehog_api.error.TrufflehogApiError.reason" class="name">var <span class="ident">reason</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="trufflehog_api.error.TrufflehogApiError.response" class="name">var <span class="ident">response</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
       </div>
+      </div>
+
   </section>
 
     </article>
