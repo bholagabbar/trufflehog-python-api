@@ -373,8 +373,7 @@ def _append_env_access_token_to_path(path, token_key):
     # FIXME - This only supports github!
     idx = path.find("github.com/")
     if idx > -1:
-        path = path[:idx] + \
-            os.environ.get(token_key) + ":x-oauth-basic@" + path[idx:]
+        path = path[:idx] + os.environ.get(token_key) + ":x-oauth-basic@" + path[idx:]
     return path
 
 
@@ -407,6 +406,7 @@ def find_secrets(path: str,
 
     return execute_find_secrets_request(
         FindSecretsRequest(path, repo_config=repo_config, search_config=search_config))
+
 
 def batch_execute_find_secrets_request(requests: List[FindSecretsRequest],
                                        concurrency_level=4):
