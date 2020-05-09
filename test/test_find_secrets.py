@@ -1,9 +1,11 @@
+import concurrent.futures
 import datetime
 import os
 import unittest
 
-from .context import (SearchConfig, find_secrets, RepoConfig, 
-                      TrufflehogApiError, Secret, FindSecretsRequest)
+from .context import (SearchConfig, find_secrets, RepoConfig,
+                      TrufflehogApiError, Secret, FindSecretsRequest,
+                      batch_execute_find_secrets_request)
 
 # Set this locally or in the CI config, value should be Github API Token
 TOKEN_ENV_KEY = "TEST_GITHUB_TOKEN"
@@ -108,7 +110,6 @@ class TestFindSecrets(unittest.TestCase):
         self.assertEqual(request.repo_config, repo_config)
         self.assertEqual(request.search_config, search_config)
 
-
     def test_find_secrets_request_defaults(self):
         path = "https://github.com/user/test_repo.git"
 
@@ -117,7 +118,6 @@ class TestFindSecrets(unittest.TestCase):
         self.assertEqual(request.path, path)
         self.assertEqual(request.repo_config, None)
         self.assertEqual(request.search_config, None)
-
 
     def test_find_secrets_request_repr(self):
         path = "https://github.com/user/test_repo.git"
@@ -136,6 +136,23 @@ class TestFindSecrets(unittest.TestCase):
 
     def test_find_secrets_error(self):
         self.assertRaises(TrufflehogApiError, find_secrets, 'invalid_url')
+
+    def test_batch_execute_find_secrets_request_local(self):
+        config = SearchConfig(entropy_checks_enabled=False, regexes=SearchConfig.default_regexes())
+
+        r1 = FindSecretsRequest(".", search_config=config)
+        r2 = FindSecretsRequest(".", search_config=config)
+        r3 = FindSecretsRequest(".", search_config=config)
+
+        request_list = [r1, r2, r3]
+
+        res = batch_execute_find_secrets_request(request_list)
+        for r in res:
+            self.assertIsInstance(r, concurrent.futures.Future)
+            secrets = r.result()
+            for s in secrets:
+                self.assertIsInstance(s, Secret)
+                self.assertEqual(s.path, "test/resources/test_file.txt")
 
 
 if __name__ == '__main__':
