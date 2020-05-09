@@ -137,8 +137,8 @@ def batch_search():
     repo_config = RepoConfig(branch="test", since_commit="commit")
     search_config = SearchConfig(max_depth=1000)
     request = FindSecretsRequest(path,
-                                repo_config=repo_config,
-                                search_config=search_config)
+                                 repo_config=repo_config,
+                                 search_config=search_config)
 
     request_list = [r1, r2, r3] #List of requests to be executed
 
@@ -147,5 +147,3 @@ def batch_search():
         secrets = r.result()
         for s in secrets:
             print(s)
-
-
