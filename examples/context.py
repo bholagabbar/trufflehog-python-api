@@ -14,10 +14,7 @@ import sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 # Copy imports from trufflehog_api.__init__.py, Required for tests to run
-
 import trufflehog_api
+from trufflehog_api.find_secrets import (FindSecretsRequest, Secret,
+                            batch_execute_find_secrets_request, find_secrets)
 
-from trufflehog_api import RepoConfig
-from trufflehog_api.search_config import SearchConfig
-from trufflehog_api.find_secrets import (Secret, find_secrets, FindSecretsRequest)
-from trufflehog_api.error import TrufflehogApiError

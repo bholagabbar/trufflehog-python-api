@@ -95,13 +95,12 @@ class RepoConfig:
         return self._access_token_env_key
 
     @staticmethod
-    def from_str(input_config: str):
+    def from_dict(config_dict: dict()):
 
         """
-        Takes a json string with the desired configurations and generates a RepoConfig object
+        Takes a dictionary with the desired configurations and generates a RepoConfig object
 
-        JSON Format
-        \t
+        Dict Format \t
         {\t
             "branch": string, \t
             "since_commit": string, \t
@@ -113,7 +112,6 @@ class RepoConfig:
 
         :return: Returns a RepoConfig from the a json string
         """
-        config_dict = json.loads(input_config, strict=False)
         branch = None
         since_commit = None
         access_token_env_key = None

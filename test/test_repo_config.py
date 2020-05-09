@@ -18,14 +18,15 @@ class TestRepoConfig(unittest.TestCase):
         self.assertEqual(r.branch, test_branch, "since branch should match")
         self.assertEqual(r.since_commit, test_commit, "since commit should match")
 
-    def test_from_str(self):
+    def test_from_dict(self):
         config = """
         {
             "branch" : "master",
             "since_commit": "123"
         }
         """
-        r_config = RepoConfig.from_str(config)
+        config_dict = json.loads(config)
+        r_config = RepoConfig.from_dict(config_dict)
         self.assertEqual(r_config.branch, "master")
         self.assertEqual(r_config.since_commit, "123")
 
