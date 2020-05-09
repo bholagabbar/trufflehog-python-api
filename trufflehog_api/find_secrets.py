@@ -8,9 +8,12 @@ import datetime
 import json
 import os
 import shutil
+import stat
+import tempfile
 import warnings
 from typing import List
 
+from git import Repo
 from git.repo.fun import is_git_dir
 from truffleHog import truffleHog
 
@@ -233,8 +236,9 @@ class FindSecretsRequest:
         return ("FindSecretsRequest(path={path}, "
                 "repo_config={repo_config}, "
                 "search_config={search_config})").format(path=self._path,
-                                                                       repo_config=repr_repo,
-                                                                       search_config=repr_search)
+                                                         repo_config=repr_repo,
+                                                         search_config=repr_search)
+
 
 def execute_find_secrets_request(request: FindSecretsRequest) -> List[Secret]:
     """
@@ -257,25 +261,36 @@ def execute_find_secrets_request(request: FindSecretsRequest) -> List[Secret]:
         search_config = SearchConfig()
 
     token_key = repo_config.access_token_env_key
+    token_exists = token_key and token_key in os.environ
+
+    repo = None
+    repo_path = path
 
     if is_git_dir(path + os.path.sep + ".git"):
-        # Is repo is local repository and env access token is present, display warning.
-        if token_key and token_key in os.environ:
+        # If repo is local and env key for access token is present, display warning
+        if token_exists:
             warnings.warn("Warning: local repository path provided with an access token - "
                           "Token will be ignored")
-        git_url = None
-        repo_path = path
     else:
-        # Is repo is remote, append env access if present to the path
+        # If repo is remote, append access token to path from its env key
         git_url = path
-        if token_key and token_key in os.environ:
+        if token_exists:
             git_url = _append_env_access_token_to_path(path, token_key)
-        repo_path = None
+
+        # We pre-clone the repo to fix a bug that causes truffleHog to crash
+        # on Windows machines when run on remote repositories.
+        try:
+            repo_path = tempfile.mkdtemp()
+            repo = Repo.clone_from(git_url, repo_path)
+        except Exception as e:
+            _delete_tempdir(repo_path)
+            raise TrufflehogApiError(e)
 
     do_regex = search_config.regexes
 
+    secrets = None
     try:
-        output = truffleHog.find_strings(git_url=git_url,
+        output = truffleHog.find_strings(git_url=None,
                                          since_commit=repo_config.since_commit,
                                          max_depth=search_config.max_depth,
                                          do_regex=do_regex,
@@ -287,10 +302,25 @@ def execute_find_secrets_request(request: FindSecretsRequest) -> List[Secret]:
                                          path_exclusions=search_config.exclude_search_paths)
         secrets = _convert_default_output_to_secrets(output)
         _clean_up(output)
-        return secrets
-
     except Exception as e:
         raise TrufflehogApiError(e)
+
+    if repo is not None:
+        repo.close()  # truffleHog doesn't do this, which causes a bug on Windows
+        _delete_tempdir(repo_path)
+
+    return secrets
+
+
+def _delete_tempdir(path: str):
+    """Deletes a Repo that was cloned to project_path.  For use in
+    execute_find_secrets_request
+    """
+    def del_rw(func, path, _exc):
+        os.chmod(path, stat.S_IWRITE)
+        func(path)
+    shutil.rmtree(path, onerror=del_rw)
+
 
 def _convert_default_output_to_secrets(output: dict) -> List[Secret]:
     """
@@ -342,7 +372,8 @@ def _append_env_access_token_to_path(path, token_key):
     # FIXME - This only supports github!
     idx = path.find("github.com/")
     if idx > -1:
-        path = path[:idx] + os.environ.get(token_key) + ":x-oauth-basic@" + path[idx:]
+        path = path[:idx] + \
+            os.environ.get(token_key) + ":x-oauth-basic@" + path[idx:]
     return path
 
 
@@ -372,7 +403,6 @@ def find_secrets(path: str,
 
     :rtype: List[Secret]
     """
-    
+
     return execute_find_secrets_request(
         FindSecretsRequest(path, repo_config=repo_config, search_config=search_config))
-
