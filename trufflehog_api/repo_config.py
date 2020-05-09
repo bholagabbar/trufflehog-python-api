@@ -2,7 +2,7 @@
 Contains the RepoConfig class that specifies attributes for a repository
 when searching for secrets.
 """
-
+import json
 
 class RepoConfig:
     """Class to encapsulate details of a Git repository to search secrets in.
@@ -94,12 +94,38 @@ class RepoConfig:
         """
         return self._access_token_env_key
 
+    @staticmethod
+    def from_str(input_config: str):
+
+        """
+        Takes a json string with the desire configuration and generates a RepoConfig object
+
+        :param str input_config:
+            The json string containing the configuration
+
+        :return: Returns a RepoConfig from the a json string
+        """
+        config_dict = json.loads(input_config, strict=False)
+        branch = None
+        since_commit = None
+        access_token_env_key = None
+
+        if "branch" in config_dict:
+            branch = config_dict["branch"]
+            since_commit = config_dict["since_commit"]
+            access_token_env_key = config_dict["access_token_env_key"]
+
+        return RepoConfig(branch=branch, since_commit=since_commit, \
+                          access_token_env_key=access_token_env_key)
+
     def __str__(self):
         """
         :return: A string with the RepoConfig object's attributes
         """
-        return "branch: {branch}, since_commit: {since_commit}".format(
-            branch=self._branch, since_commit=self._since_commit)
+        config_dict = dict()
+        config_dict["branch"] = self._branch
+        config_dict["since_commit"] = self._since_commit
+        return json.dumps(config_dict, indent=2)
 
     def __repr__(self):
         """

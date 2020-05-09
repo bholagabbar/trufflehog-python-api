@@ -1,3 +1,7 @@
+"""
+Contains the SearchConfig class that specifies the configurations for
+finding secrets
+"""
 import json
 from copy import copy
 from typing import List, Dict
@@ -129,7 +133,10 @@ class SearchConfig:
         if "entropy_checks_enabled" in config_dict:
             entropy_checks_enabled = config_dict.get("entropy_checks_enabled")
         if "regexes" in config_dict:
-            regexes = config_dict.get("regexes")
+            if config_dict.get("entropy_checks_enabled") == "default":
+                regexes = SearchConfig.default_regexes()
+            else:
+                regexes = config_dict.get("regexes")
 
         config = SearchConfig(
             max_depth=max_depth,
