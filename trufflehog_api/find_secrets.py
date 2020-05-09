@@ -143,11 +143,11 @@ class Secret:
                 "commit_hash: {commit_hash}\n"
                 "reason: {reason}\n"
                 "path: {path}\n".format(commit_time=self._commit_time,
-                                      branch_name=self._branch_name,
-                                      commit=self._commit.strip('\n'),
-                                      commit_hash=self._commit_hash,
-                                      reason=self._reason,
-                                      path=self._path))
+                                        branch_name=self._branch_name,
+                                        commit=self._commit.strip('\n'),
+                                        commit_hash=self._commit_hash,
+                                        reason=self._reason,
+                                        path=self._path))
 
     def __repr__(self):
         """
