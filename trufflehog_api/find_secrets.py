@@ -4,6 +4,7 @@ by RepoConfig and SearchConfig. Presents the output as a list of Secret
 objects that can be easily parsed or outputted.
 """
 
+import concurrent.futures
 import datetime
 import json
 import os
@@ -406,3 +407,31 @@ def find_secrets(path: str,
 
     return execute_find_secrets_request(
         FindSecretsRequest(path, repo_config=repo_config, search_config=search_config))
+
+def batch_execute_find_secrets_request(requests: List[FindSecretsRequest],
+                                       concurrency_level=4):
+    """
+    Executes a search for secrets for the list of requests concurrently
+
+     :param list requests:
+         List of FindSecretRequest objects
+
+     :param int concurrency_level:
+         Maximum number of threads to spawn while creating a ThreadPoolExecutor
+         instance which manages the execution of the jobs.
+
+     :raises TrufflehogApiError:
+         wraps an exception that occurred on calling truffleHog.find_strings(),
+         creating a ThreadPoolExecutor instance or submitting jobs
+
+     :return: list of futures jobs that were submitted to the ThreadPoolExecutor for processing
+     """
+    res = []
+    try:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=concurrency_level) as executor:
+            for request in requests:
+                future_result = executor.submit(execute_find_secrets_request, request)
+                res.append(future_result)
+        return res
+    except Exception as e:
+        raise TrufflehogApiError(e)
