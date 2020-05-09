@@ -306,6 +306,7 @@ def execute_find_secrets_request(request: FindSecretsRequest) -> List[Secret]:
     except Exception as e:
         raise TrufflehogApiError(e)
 
+    # Delete our clone of the remote repo (if it exists)
     if repo is not None:
         repo.close()  # truffleHog doesn't do this, which causes a bug on Windows
         _delete_tempdir(repo_path)
@@ -314,8 +315,7 @@ def execute_find_secrets_request(request: FindSecretsRequest) -> List[Secret]:
 
 
 def _delete_tempdir(path: str):
-    """Deletes a Repo that was cloned to project_path.  For use in
-    execute_find_secrets_request
+    """Deletes a Repo that was cloned to path.  For use in execute_find_secrets_request.
     """
     def del_rw(func, path, _exc):
         os.chmod(path, stat.S_IWRITE)
