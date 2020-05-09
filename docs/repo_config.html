@@ -124,13 +124,12 @@ class RepoConfig:
         return self._access_token_env_key
 
     @staticmethod
-    def from_str(input_config: str):
+    def from_dict(config_dict: dict()):
 
         &#34;&#34;&#34;
-        Takes a json string with the desired configurations and generates a RepoConfig object
+        Takes a dictionary with the desired configurations and generates a RepoConfig object
 
-        JSON Format
-        \t
+        Dict Format \t
         {\t
             &#34;branch&#34;: string, \t
             &#34;since_commit&#34;: string, \t
@@ -142,7 +141,6 @@ class RepoConfig:
 
         :return: Returns a RepoConfig from the a json string
         &#34;&#34;&#34;
-        config_dict = json.loads(input_config, strict=False)
         branch = None
         since_commit = None
         access_token_env_key = None
@@ -305,13 +303,12 @@ private repo access
         return self._access_token_env_key
 
     @staticmethod
-    def from_str(input_config: str):
+    def from_dict(config_dict: dict()):
 
         &#34;&#34;&#34;
-        Takes a json string with the desired configurations and generates a RepoConfig object
+        Takes a dictionary with the desired configurations and generates a RepoConfig object
 
-        JSON Format
-        \t
+        Dict Format \t
         {\t
             &#34;branch&#34;: string, \t
             &#34;since_commit&#34;: string, \t
@@ -323,7 +320,6 @@ private repo access
 
         :return: Returns a RepoConfig from the a json string
         &#34;&#34;&#34;
-        config_dict = json.loads(input_config, strict=False)
         branch = None
         since_commit = None
         access_token_env_key = None
@@ -366,6 +362,61 @@ private repo access
 </details>
 <h3>Static methods</h3>
 <dl>
+<dt id="trufflehog_api.repo_config.RepoConfig.from_dict"><code class="name flex">
+<span>def <span class="ident">from_dict</span></span>(<span>config_dict: {})</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Takes a dictionary with the desired configurations and generates a RepoConfig object</p>
+<p>Dict Format
+<br>
+{
+<br>
+"branch": string, <br>
+"since_commit": string,
+<br>
+"access_token_env": string<br>
+}
+</p>
+<p>:param str input_config:
+The json string containing the configuration</p>
+<p>:return: Returns a RepoConfig from the a json string</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def from_dict(config_dict: dict()):
+
+    &#34;&#34;&#34;
+    Takes a dictionary with the desired configurations and generates a RepoConfig object
+
+    Dict Format \t
+    {\t
+        &#34;branch&#34;: string, \t
+        &#34;since_commit&#34;: string, \t
+        &#34;access_token_env&#34;: string \t
+    }\t
+
+    :param str input_config:
+        The json string containing the configuration
+
+    :return: Returns a RepoConfig from the a json string
+    &#34;&#34;&#34;
+    branch = None
+    since_commit = None
+    access_token_env_key = None
+
+    if &#34;branch&#34; in config_dict:
+        branch = config_dict[&#34;branch&#34;]
+    if &#34;since_commit&#34; in config_dict:
+        since_commit = config_dict[&#34;since_commit&#34;]
+    if  &#34;access_token_env_key&#34; in config_dict:
+        access_token_env_key = config_dict[&#34;access_token_env_key&#34;]
+
+    return RepoConfig(branch=branch, since_commit=since_commit,
+                      access_token_env_key=access_token_env_key)</code></pre>
+</details>
+</dd>
 <dt id="trufflehog_api.repo_config.RepoConfig.from_repo_config"><code class="name flex">
 <span>def <span class="ident">from_repo_config</span></span>(<span>repo_config, branch_override: str = None, since_commit_override: str = None, access_token_env_key_override: str = None)</span>
 </code></dt>
@@ -430,62 +481,6 @@ def from_repo_config(cls, repo_config,
     return cls(branch=branch_to_set,
                since_commit=since_commit_to_set,
                access_token_env_key=access_token_env_key_to_set)</code></pre>
-</details>
-</dd>
-<dt id="trufflehog_api.repo_config.RepoConfig.from_str"><code class="name flex">
-<span>def <span class="ident">from_str</span></span>(<span>input_config: str)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Takes a json string with the desired configurations and generates a RepoConfig object</p>
-<p>JSON Format</p>
-<p>{
-<br>
-"branch": string, <br>
-"since_commit": string,
-<br>
-"access_token_env": string<br>
-}
-</p>
-<p>:param str input_config:
-The json string containing the configuration</p>
-<p>:return: Returns a RepoConfig from the a json string</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">@staticmethod
-def from_str(input_config: str):
-
-    &#34;&#34;&#34;
-    Takes a json string with the desired configurations and generates a RepoConfig object
-
-    JSON Format
-    \t
-    {\t
-        &#34;branch&#34;: string, \t
-        &#34;since_commit&#34;: string, \t
-        &#34;access_token_env&#34;: string \t
-    }\t
-
-    :param str input_config:
-        The json string containing the configuration
-
-    :return: Returns a RepoConfig from the a json string
-    &#34;&#34;&#34;
-    config_dict = json.loads(input_config, strict=False)
-    branch = None
-    since_commit = None
-    access_token_env_key = None
-
-    if &#34;branch&#34; in config_dict:
-        branch = config_dict[&#34;branch&#34;]
-    if &#34;since_commit&#34; in config_dict:
-        since_commit = config_dict[&#34;since_commit&#34;]
-    if  &#34;access_token_env_key&#34; in config_dict:
-        access_token_env_key = config_dict[&#34;access_token_env_key&#34;]
-
-    return RepoConfig(branch=branch, since_commit=since_commit,
-                      access_token_env_key=access_token_env_key)</code></pre>
 </details>
 </dd>
 </dl>
@@ -581,8 +576,8 @@ def since_commit(self) -&gt; str:
 <ul class="">
 <li><code><a title="trufflehog_api.repo_config.RepoConfig.access_token_env_key" href="#trufflehog_api.repo_config.RepoConfig.access_token_env_key">access_token_env_key</a></code></li>
 <li><code><a title="trufflehog_api.repo_config.RepoConfig.branch" href="#trufflehog_api.repo_config.RepoConfig.branch">branch</a></code></li>
+<li><code><a title="trufflehog_api.repo_config.RepoConfig.from_dict" href="#trufflehog_api.repo_config.RepoConfig.from_dict">from_dict</a></code></li>
 <li><code><a title="trufflehog_api.repo_config.RepoConfig.from_repo_config" href="#trufflehog_api.repo_config.RepoConfig.from_repo_config">from_repo_config</a></code></li>
-<li><code><a title="trufflehog_api.repo_config.RepoConfig.from_str" href="#trufflehog_api.repo_config.RepoConfig.from_str">from_str</a></code></li>
 <li><code><a title="trufflehog_api.repo_config.RepoConfig.since_commit" href="#trufflehog_api.repo_config.RepoConfig.since_commit">since_commit</a></code></li>
 <li><code><a title="trufflehog_api.repo_config.RepoConfig.to_dict" href="#trufflehog_api.repo_config.RepoConfig.to_dict">to_dict</a></code></li>
 </ul>

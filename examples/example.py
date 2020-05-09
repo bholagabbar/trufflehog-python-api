@@ -5,7 +5,6 @@ import json
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from trufflehog_api import *
 
-
 # Set this locally or in the CI config, value should be Github API Token
 TOKEN_ENV_KEY = "TEST_GITHUB_TOKEN"
 
@@ -106,9 +105,9 @@ def simple_search_with_json():
     #Create a RepoConfig object from the string
     r_config = RepoConfig.from_dict(r_dict)
 
-    # #Search through the truffleHog repo with the search configs specfied in s_config
-    # #and the repo configs in r_config
-    # #secrets is the List of Secrets that were found by the truffleHog API
+    #Search through the truffleHog repo with the search configs specfied in s_config
+    #and the repo configs in r_config
+    #secrets is the List of Secrets that were found by the truffleHog API
     secrets = find_secrets("https://github.com/dxa4481/truffleHog.git",
                            repo_config=r_config,
                            search_config=s_config)
@@ -118,7 +117,6 @@ def simple_search_with_json():
             secret_dict = secret.to_dict()
             del secret_dict['diff'] #Do not include the diff
             output_file.write(str(secret_dict) + "\n")
-
 
 """
 Perform a batch search
