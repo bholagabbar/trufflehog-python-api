@@ -98,7 +98,15 @@ class RepoConfig:
     def from_str(input_config: str):
 
         """
-        Takes a json string with the desire configuration and generates a RepoConfig object
+        Takes a json string with the desired configurations and generates a RepoConfig object
+
+        JSON Format
+        \t
+        {\t
+            "branch": string, \t
+            "since_commit": string, \t
+            "access_token_env": string \t
+        }\t
 
         :param str input_config:
             The json string containing the configuration
@@ -112,10 +120,12 @@ class RepoConfig:
 
         if "branch" in config_dict:
             branch = config_dict["branch"]
+        if "since_commit" in config_dict:
             since_commit = config_dict["since_commit"]
+        if  "access_token_env_key" in config_dict:
             access_token_env_key = config_dict["access_token_env_key"]
 
-        return RepoConfig(branch=branch, since_commit=since_commit, \
+        return RepoConfig(branch=branch, since_commit=since_commit,
                           access_token_env_key=access_token_env_key)
 
     def __str__(self):
@@ -126,6 +136,15 @@ class RepoConfig:
         config_dict["branch"] = self._branch
         config_dict["since_commit"] = self._since_commit
         return json.dumps(config_dict, indent=2)
+
+    def to_dict(self):
+        """
+        :return: A dict with the RepoConfig object's attributes
+        """
+        config_dict = dict()
+        config_dict["branch"] = self._branch
+        config_dict["since_commit"] = self._since_commit
+        return config_dict
 
     def __repr__(self):
         """
