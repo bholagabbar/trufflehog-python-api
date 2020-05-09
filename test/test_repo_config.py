@@ -1,4 +1,5 @@
 import unittest
+import json
 
 from .context import RepoConfig
 
@@ -17,11 +18,26 @@ class TestRepoConfig(unittest.TestCase):
         self.assertEqual(r.branch, test_branch, "since branch should match")
         self.assertEqual(r.since_commit, test_commit, "since commit should match")
 
+    def test_from_dict(self):
+        config = """
+        {
+            "branch" : "master",
+            "since_commit": "123"
+        }
+        """
+        config_dict = json.loads(config)
+        r_config = RepoConfig.from_dict(config_dict)
+        self.assertEqual(r_config.branch, "master")
+        self.assertEqual(r_config.since_commit, "123")
+
     def test_repository_str(self):
         test_branch = 'master'
         test_commit = 'x123'
-        r = RepoConfig(branch=test_branch, since_commit=test_commit)
-        self.assertEqual(r.__str__(), "branch: master, since_commit: x123")
+        test_dict = dict()
+        test_dict["branch"] = test_branch
+        test_dict["since_commit"] = test_commit
+        r_config = RepoConfig(branch=test_branch, since_commit=test_commit)
+        self.assertEqual(r_config.__str__(), json.dumps(test_dict, indent=2))
 
     def test_repository_repr(self):
         r = RepoConfig()

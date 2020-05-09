@@ -2,6 +2,7 @@ import concurrent.futures
 import datetime
 import os
 import unittest
+import json
 
 from .context import (SearchConfig, find_secrets, RepoConfig,
                       TrufflehogApiError, Secret, FindSecretsRequest,
@@ -36,12 +37,13 @@ class TestFindSecrets(unittest.TestCase):
 
         # Testing str
         self.assertEqual(str(secret).replace(" ", ""),
-                         """commit_time: 2020-09-16 00:00:00,
-                         branch_name: branch,
-                         commit: commit,
-                         commit_hash: commit_hash,
-                         reason: reason,
-                         path: path """.replace(" ", ""))
+                         """commit_time: 2020-09-16 00:00:00
+                         branch_name: branch
+                         commit: commit
+                         commit_hash: commit_hash
+                         reason: reason
+                         path: path
+                         """.replace(" ", ""))
 
         # Testing repr
         self.assertEqual(repr(secret).replace(" ", ""),
@@ -118,6 +120,30 @@ class TestFindSecrets(unittest.TestCase):
         self.assertEqual(request.path, path)
         self.assertEqual(request.repo_config, None)
         self.assertEqual(request.search_config, None)
+
+    def test_find_secrets_request_str(self):
+        path = "https://github.com/user/test_repo.git"
+        repo_config = RepoConfig(branch="test", since_commit="commit")
+        search_config = SearchConfig(max_depth=1000)
+        req = '''{
+            "path": "https://github.com/user/test_repo.git",
+            "repo_config": {
+                "branch": "test",
+                "since_commit": "commit"
+            },
+            "search_config": {
+                "max_depth": 1000,
+                "entropy_checks_enabled": true,
+                "include_search_paths": null,
+                "exclude_search_paths": null
+            }
+        }'''.replace(" ", "")
+
+        request = FindSecretsRequest(path,
+                                     repo_config=repo_config,
+                                     search_config=search_config)
+
+        self.assertEqual(str(request).replace(" ",""), req)
 
     def test_find_secrets_request_repr(self):
         path = "https://github.com/user/test_repo.git"

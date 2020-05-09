@@ -75,18 +75,20 @@ class TestSearchConfig(unittest.TestCase):
                                               "entropy_checks_enabled=True, "
                                               "regexes=None)")
 
-    def test_from_str(self):
+    def test_from_dict(self):
         # String generated using from_str
         include_search_paths = ["*.py"]
         exclude_search_paths = ["/docs"]
         regexes = {"random": ".*"}
-        search_config = SearchConfig(max_depth=10,
-                                     entropy_checks_enabled=False,
-                                     include_search_paths=include_search_paths,
-                                     exclude_search_paths=exclude_search_paths,
-                                     regexes=regexes)
-        string = str(search_config)
-        config = SearchConfig.from_str(string)
+
+        s_dict = dict()
+        s_dict["entropy_checks_enabled"] = False
+        s_dict["max_depth"] = 10
+        s_dict["include_search_paths"] = include_search_paths
+        s_dict["exclude_search_paths"] = exclude_search_paths
+        s_dict["regexes"] = regexes
+
+        config = SearchConfig.from_dict(s_dict)
         self.assertTrue(config.max_depth == 10)
         self.assertFalse(config.entropy_checks_enabled)
         self.assertTrue(config.include_search_paths == include_search_paths)

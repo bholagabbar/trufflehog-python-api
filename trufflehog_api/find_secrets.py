@@ -137,17 +137,17 @@ class Secret:
         :return: Returns a string containing all the attributes of a Secret
         besides the diff.
         """
-        return ("commit_time: {commit_time},\n"
-                "branch_name: {branch_name},\n"
-                "commit: {commit},\n"
-                "commit_hash: {commit_hash},\n"
-                "reason: {reason},\n"
-                "path: {path}".format(commit_time=self._commit_time,
-                                      branch_name=self._branch_name,
-                                      commit=self._commit,
-                                      commit_hash=self._commit_hash,
-                                      reason=self._reason,
-                                      path=self._path))
+        return ("commit_time: {commit_time}\n"
+                "branch_name: {branch_name}\n"
+                "commit: {commit}\n"
+                "commit_hash: {commit_hash}\n"
+                "reason: {reason}\n"
+                "path: {path}\n".format(commit_time=self._commit_time,
+                                        branch_name=self._branch_name,
+                                        commit=self._commit.strip('\n'),
+                                        commit_hash=self._commit_hash,
+                                        reason=self._reason,
+                                        path=self._path))
 
     def __repr__(self):
         """
@@ -158,7 +158,7 @@ class Secret:
                 "commit={commit}, "
                 "commit_hash={commit_hash}, "
                 "diff={diff}, "
-                "reason={reason}, "
+                "reason={reason},"
                 "path={path})".format(commit_time=self._commit_time,
                                       branch_name=self._branch_name,
                                       commit=self._commit,
@@ -221,10 +221,17 @@ class FindSecretsRequest:
         """
         :return: Returns a json string containing all the attributes of the FindSecretsRequest
         """
+        n_config = dict()
+        s_config = self._search_config
+        n_config["max_depth"] = s_config.max_depth
+        n_config["entropy_checks_enabled"] = s_config.entropy_checks_enabled
+        n_config["include_search_paths"] = s_config.include_search_paths
+        n_config["exclude_search_paths"] = s_config.exclude_search_paths
+
         request = dict()
         request["path"] = self._path
-        request["repo_config"] = self._repo_config
-        request["search_config"] = self._search_config
+        request["repo_config"] = self._repo_config.to_dict()
+        request["search_config"] = n_config
         request_string = json.dumps(request, indent=2)
         return request_string
 
