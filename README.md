@@ -1,5 +1,5 @@
-# 17480 Final Project
-  17-480 Final Project Repository. Building an API over the [truffleHog](https://github.com/dxa4481/truffleHog/) library.
+# truffleHog Python API
+  Building a Python API over the [truffleHog](https://github.com/dxa4481/truffleHog/) library.
 
 [![Build Status](https://travis-ci.com/cakeid/17480-Final-Project.svg?token=x1jLGpFqhXWPzfonGfC3&branch=master)](https://travis-ci.com/cakeid/17480-Final-Project)
 
