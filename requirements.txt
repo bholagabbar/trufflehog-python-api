@@ -1,6 +1,6 @@
 gitdb==4.0.4
 gitdb2==4.0.2
-GitPython==3.0.6
+GitPython==3.1.32
 smmap==3.0.2
 truffleHog==2.1.11
 truffleHogRegexes==0.0.7
